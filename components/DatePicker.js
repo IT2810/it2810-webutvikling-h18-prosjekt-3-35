@@ -86,15 +86,18 @@ export class DatePicker extends Component {
         const data = this.state.dateList;
         const flatListData = [];
         for (date in data) {
-            flatListData.push({key: "" + data[date]});
+            flatListData.push({
+                key: date,
+                value: "" + data[date],
+            });
         }
         return (
             <FlatList
                 data={flatListData}
                 renderItem={({item}) =>
-                    <TouchableWithoutFeedback onPress={ () => this.updateChosenDate(item.key)}>
+                    <TouchableWithoutFeedback onPress={ () => this.updateChosenDate(item.value)}>
                         <View>
-                            <Text style={styles.item}>{item.key}</Text>
+                            <Text style={styles.item}>{item.value}</Text>
                         </View>
                     </TouchableWithoutFeedback>
             }/>
@@ -129,9 +132,6 @@ export class DatePicker extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-        flex: 1
     },
     text: {
         margin: 5,
