@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, {
+    Component
+} from 'react';
 import {
     Platform,
     AsyncStorage,
@@ -6,9 +8,10 @@ import {
     View,
     Text,
     Button,
-    DatePickerIOS,
-    DatePickerAndroid
+    FlatList,
+    TouchableWithoutFeedback,
 } from 'react-native';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 export class DatePicker extends Component {
     constructor(props) {
@@ -16,91 +19,121 @@ export class DatePicker extends Component {
         let today = new Date();
 
         this.state = {
-            year: today.getFullYear(),
-            month: today.getMonth(),
-            date: today.getDate(),
-            text: "No date set",
-        };
+            isDateTimePickerVisible: false,
+            date: today,
+            dateList: null,
+            text: "No date selected",
+        }
     }
 
-    componentDidMount() {
-        this.retrieveData();
-    }
+    componentDidMount = () => this.retrieveData();
 
-    componentDidUpdate() {
-        this.storeData();
-    }
+    componentDidUpdate = () => this.storeData();
 
-    async storeData() {
+    storeData = async () => {
         try {
-            await AsyncStorage.setItem('date', JSON.stringify([this.state.year, this.state.month, this.state.date]))
+            //await AsyncStorage.clear();
+            await AsyncStorage.setItem('dateList', JSON.stringify(this.state.dateList))
         } catch (error) {
 
         }
     }
 
-    async retrieveData() {
+    retrieveData = async () => {
         try {
-            const value = await AsyncStorage.getItem('date');
-            this.updateText(JSON.parse(value));
-        } catch (error) {
-
-        }
+            //await AsyncStorage.clear();
+            const value = await AsyncStorage.getItem('dateList');
+            this.updateList(JSON.parse(value));
+        } catch (error) {}
     }
 
-    iosDatePicker(year, month, date) {
-        return <DatePickerIOS
-          date={this.state.chosenDate}
-          onDateChange={this.setDate}
-        />
-    }
-
-    async androidDatePicker(year, month, date) {
-        try {
-            const {action, year, month, day} = await DatePickerAndroid.open({
-                date: new Date(parseInt(this.state.year), parseInt(this.state.month), parseInt(this.state.date))
-            });
-            if (action === DatePickerAndroid.dateSetAction) {
-                this.updateText([year, month, day]);
-            }
-        } catch ({code, message}) {
-            console.warn('Cannot open date picker', message);
-        }
-    }
-
-    updateText(date) {
+    updateList = (dateList) => {
         this.setState({
-            year:date[0],
-            month:date[1],
-            date:date[2],
-            text: date[0]+"."+date[1]+"."+date[2]
+            dateList: dateList,
         });
     }
 
-    render() {
+    updateChosenDate = (date) => {
+        date  = new Date(date);
+        this.setState({
+            date: date,
+            text: "" + date,
+        });
+    }
+
+    showDateTimePicker = () => this.setState({
+        isDateTimePickerVisible: true
+    });
+
+    hideDateTimePicker = () => this.setState({
+        isDateTimePickerVisible: false
+    });
+
+    handleDatePicked = (date) => {
+        console.log('A date has been picked: ', date);
+        const dateList = this.state.dateList === null ? [] : this.state.dateList;
+        console.log(dateList, date);
+        dateList.push(date);
+        this.setState({
+            date: date,
+            dateList: dateList,
+        });
+        this.updateList(dateList);
+        this.hideDateTimePicker();
+    };
+
+    getDateList = () =>  {
+        const data = this.state.dateList;
+        const flatListData = [];
+        for (date in data) {
+            flatListData.push({key: "" + data[date]});
+        }
         return (
-            <View style={styles.container}>
-                <Text
-                    style={styles.text}
-                    >
-                {this.state.text}
+            <FlatList
+                data={flatListData}
+                renderItem={({item}) =>
+                    <TouchableWithoutFeedback onPress={ () => this.updateChosenDate(item.key)}>
+                        <View>
+                            <Text style={styles.item}>{item.key}</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+            }/>
+        )
+    }
+
+    render() {
+        const flatList = this.getDateList();
+        return ( <
+            View style = {styles.container}>
+                {flatList}
+
+                <Text style = {styles.text}>
+                    {this.state.text}
                 </Text>
+
                 <Button
-                    title={"Open Calendar"}
-                    onPress={() => Platform.OS == 'ios' ? this.iosDatePicker() : this.androidDatePicker()}
-                />
+                    title = {"Open Calendar"}
+                    onPress = {() => this.showDateTimePicker()}
+                    />
+
+                <DateTimePicker
+                    date = {this.state.date}
+                    isVisible = {this.state.isDateTimePickerVisible}
+                    onConfirm = {this.handleDatePicked}
+                    onCancel = {this.hideDateTimePicker}
+                    />
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container : {
+    container: {
         flexDirection: 'column',
         justifyContent: 'flex-end',
         flex: 1
     },
-    text : {
+    text: {
         margin: 5,
         padding: 20,
         fontSize: 18,
@@ -110,5 +143,17 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         borderColor: 'black',
         borderWidth: 1,
+    },
+    listView: {
+
+    },
+    item: {
+        textAlign: 'center',
+        marginTop: 4,
+        padding: 10,
+        borderRadius: 1,
+        borderWidth: 1,
+        borderColor: 'black',
+        backgroundColor: 'white'
     }
 });
