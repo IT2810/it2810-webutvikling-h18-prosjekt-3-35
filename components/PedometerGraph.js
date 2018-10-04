@@ -19,15 +19,33 @@ export class PedometerProgressGraph extends Component {
         }
     }
 
-    componentDidMount() {
-        this.calculateProgress(this.props.stepsWalked, this.props.goal);
-    };
+    componentDidMount = () => this.calculateProgress(this.props.stepsWalked, this.props.goal);
 
     calculateProgress = (stepsWalked, goal) => this.setState({
         progress: (stepsWalked / goal)
     });
 
+    goalText = () => {
+        let returnText;
+        if (this.state.progress === 1 || this.state.progress > 1) {
+            returnText = <Text style={styles.resultText}>Du har nådd målet!</Text>
+        } else {
+            returnText = <View></View>
+        }
+
+        return (
+            <View>
+                <Text
+                    style={styles.distance}>
+                    {this.props.stepsWalked}
+                </Text>
+                {returnText}
+            </View>
+        );
+    }
+
     render() {
+        const goalResutText = this.goalText();
         return (
             <View>
                 <ProgressCircle
@@ -37,10 +55,7 @@ export class PedometerProgressGraph extends Component {
                     startAngle={ -Math.PI * 0.8 }
                     endAngle={ Math.PI * 0.8 }
                 />
-                <Text
-                        style={styles.distance}>
-                    {this.props.stepsWalked}
-                </Text>
+                {goalResutText}
                 <View style={styles.lineSeperator}/>
             </View>
         );
@@ -50,7 +65,7 @@ export class PedometerProgressGraph extends Component {
 
 const styles = StyleSheet.create({
     graph: {
-        height: 150,
+        height: 130,
     },
     distance: {
         textAlign: 'center',
@@ -64,4 +79,8 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 10,
     },
+    resultText: {
+        textAlign: 'center',
+        fontSize: 30,
+    }
 });
