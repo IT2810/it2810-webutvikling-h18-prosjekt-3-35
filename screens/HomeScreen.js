@@ -24,7 +24,7 @@ export default class HomeScreen extends React.Component {
                 style={styles.logo} />
               <View style={styles.lineStyle} />
               <ScrollView style={styles.ScrollView}>
-                  <DatePicker style={styles.datepicer}/>
+                  {/*TODO: put exercise list in here*/}
               </ScrollView>
           </View>);
     }
@@ -50,8 +50,9 @@ const styles = StyleSheet.create({
     },
     lineStyle: {
         alignSelf: 'stretch',
-        borderWidth: 1,
+        borderWidth: 3,
         borderColor: 'black',
-        marginBottom: 10,
+        borderBottomColor: 'lightgray',
+        backgroundColor: 'lightgray',
     }
 });
