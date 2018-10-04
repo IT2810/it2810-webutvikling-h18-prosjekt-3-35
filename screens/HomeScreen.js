@@ -1,12 +1,14 @@
 import React from 'react';
 import {
-  Platform,
-  ScrollView,
-  Image,
-  StyleSheet,
-  View
-  } from 'react-native';
-import { DatePicker } from '../components/DatePicker';
+    Platform,
+    AsyncStorage,
+    ScrollView,
+    Image,
+    StyleSheet,
+    View
+} from 'react-native';
+import {Card, Title, Paragraph} from 'react-native-paper';
+import {DatePicker} from '../components/DatePicker';
 
 
 const logoSource = '../assets/images/pmm.png';
@@ -18,15 +20,19 @@ export default class HomeScreen extends React.Component {
 
     render() {
         return (
-          <View style={styles.container}>
-              <Image
-                source={require(logoSource)}
-                style={styles.logo} />
-              <View style={styles.lineStyle} />
-              <ScrollView style={styles.ScrollView}>
-                  {/*TODO: put exercise list in here*/}
-              </ScrollView>
-          </View>);
+            <View style={styles.container}>
+                <Image
+                    source={require(logoSource)}
+                    style={styles.logo}/>
+                <View style={styles.lineStyle}/>
+                <ScrollView style={styles.ScrollView}>
+                    <Card>
+                        <Card.Content>
+                            <Title>Markløft</Title>
+                        </Card.Content>
+                    </Card>
+                </ScrollView>
+            </View>);
     }
 }
 
@@ -42,7 +48,7 @@ const styles = StyleSheet.create({
         marginTop: 18,
         marginBottom: 5,
         height: 100,
-        width: 100
+        width: 105
     },
     ScrollView: {
         backgroundColor: 'lightgray',

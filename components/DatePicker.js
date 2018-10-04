@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'steelblue',
         borderColor: 'black',
         borderRadius: 2,
-        borderColor: 'black',
         borderWidth: 1,
     },
     listView: {
