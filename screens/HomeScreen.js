@@ -14,11 +14,40 @@ import {DatePicker} from '../components/DatePicker';
 const logoSource = '../assets/images/pmm.png';
 
 export default class HomeScreen extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            exercises: ['Markløft', 'Knebøy', 'Benkpress'],
+        }
+    }
+
     static navigationOptions = {
         header: null
     };
 
+
+    storeData = async () => {
+        try {
+            //await AsyncStorage.clear();
+            await AsyncStorage.setItem('exercises', JSON.stringify(['Markløft', 'Knebøy', 'Benkpress']))
+        } catch (error) {
+
+        }
+    }
+
+    getExercises = () => {
+        exerciseCardList = [];
+        exerciseCardList = this.state.exercises.map(ex => (
+            <Card key={ex}>
+                <Card.Content>
+                    <Title>{ex}</Title>
+                </Card.Content>
+            </Card>
+        ));
+        return exerciseCardList;
+    }
     render() {
+        const exerciseList = this.getExercises();
         return (
             <View style={styles.container}>
                 <Image
@@ -26,11 +55,7 @@ export default class HomeScreen extends React.Component {
                     style={styles.logo}/>
                 <View style={styles.lineStyle}/>
                 <ScrollView style={styles.ScrollView}>
-                    <Card>
-                        <Card.Content>
-                            <Title>Markløft</Title>
-                        </Card.Content>
-                    </Card>
+                    {exerciseList}
                 </ScrollView>
             </View>);
     }
