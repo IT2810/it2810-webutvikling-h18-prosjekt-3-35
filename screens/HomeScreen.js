@@ -19,49 +19,49 @@ import {
 const logoSource = '../assets/images/pmm.png';
 
 export default class HomeScreen extends React.Component {
-        static navigationOptions = {
-            header: null
-        };
+    static navigationOptions = {
+        header: null
+    };
 
-        render() {
-            return (
-                <View style = {styles.container}>
-                    <Image 
-                        source = {require(logoSource)}
-                        style = {styles.logo}/>
-                    <View style = {styles.lineStyle}/>
-                    <ScrollView style = {styles.ScrollView} >
-                        <PedometerProgressGraph stepsWalked={1000} goal={7000} />
-                        { /*TODO: put exercise list in here*/ } 
-                    </ScrollView>
-                </View>);
-            }
+    render() {
+        return (
+            <View style = {styles.container}>
+                <Image 
+                    source = {require(logoSource)}
+                    style = {styles.logo}/>
+                <View style = {styles.lineStyle}/>
+                <ScrollView style = {styles.ScrollView} >
+                    <PedometerProgressGraph stepsWalked={1000} goal={7000} />
+                    { /*TODO: put exercise list in here*/ } 
+                </ScrollView>
+            </View>);
         }
+    }
 
-        const styles = StyleSheet.create({
-            container: {
-                backgroundColor: 'lightgray',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flex: 1,
-                paddingHorizontal: 20,
-            },
-            logo: {
-                marginTop: 18,
-                marginBottom: 5,
-                height: 100,
-                width: 100
-            },
-            ScrollView: {
-                backgroundColor: 'lightgray',
-                alignSelf: 'stretch',
-            },
-            lineStyle: {
-                alignSelf: 'stretch',
-                borderWidth: 3,
-                borderColor: 'black',
-                borderBottomColor: 'lightgray',
-                backgroundColor: 'lightgray',
-                marginBottom: 10,
-            }
-        });
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'lightgray',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+        paddingHorizontal: 20,
+    },
+    logo: {
+        marginTop: 18,
+        marginBottom: 5,
+        height: 100,
+        width: 100
+    },
+    ScrollView: {
+        backgroundColor: 'lightgray',
+        alignSelf: 'stretch',
+    },
+    lineStyle: {
+        alignSelf: 'stretch',
+        borderWidth: 3,
+        borderColor: 'black',
+        borderBottomColor: 'lightgray',
+        backgroundColor: 'lightgray',
+        marginBottom: 10,
+    }
+});
