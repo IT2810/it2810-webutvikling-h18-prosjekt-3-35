@@ -1,11 +1,13 @@
-import React from 'react';
+import React, 
+    { Component
+} from 'react';
 import {
-    Platform,
     ScrollView,
     Image,
     StyleSheet,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    AsyncStorage,
 } from 'react-native';
 import {
     DatePicker
@@ -21,29 +23,50 @@ import {
 } from '../components/ModalPedometerGoal';
 
 const logoSource = '../assets/images/pmm.png';
+const dailyGoal = 'dailyGoal';
 
-export default class HomeScreen extends React.Component {
+export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             pedometerModalVisible: false,
             stepsWalked: 1000,
-            stepGoal: 500,
+            stepGoal: 10000,
         }
     }
     static navigationOptions = {
         header: null,
     };
 
+    componentDidMount = () => this.retrieveData(dailyGoal);
+
+    saveData = async (location, data) => {
+        try {
+            await AsyncStorage.setItem(location, JSON.stringify(data));
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
+    retrieveData = async (location) => {
+        try {
+            const value = await AsyncStorage.getItem(location);
+            this.setState({
+                stepGoal: Number(JSON.parse(value))
+            });
+        } catch (error) {
+            console.warn(error);
+        }
+    }
 
     showHidePedometerModal = () => this.setState({pedometerModalVisible: !this.state.pedometerModalVisible});
 
     editStepGoal = (goal) => {
         this.setState({
-        pedometerModalVisible: !this.state.pedometerModalVisible,
-        stepGoal: parseInt(goal, 10),
-    })
-    console.log(goal);
+            pedometerModalVisible: !this.state.pedometerModalVisible,
+            stepGoal: parseInt(goal, 10),
+        });
+        this.saveData(dailyGoal, goal);
 }
 
     render() {
