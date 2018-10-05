@@ -4,7 +4,8 @@ import {
     ScrollView,
     Image,
     StyleSheet,
-    View
+    View,
+    TouchableOpacity
 } from 'react-native';
 import {
     DatePicker
@@ -15,13 +16,35 @@ import {
 import {
     AreaChartExample
 } from '../components/ExampleGraph';
+import {
+    ModalPedometerGoal
+} from '../components/ModalPedometerGoal';
 
 const logoSource = '../assets/images/pmm.png';
 
 export default class HomeScreen extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            pedometerModalVisible: false,
+            stepsWalked: 1000,
+            stepGoal: 500,
+        }
+    }
     static navigationOptions = {
-        header: null
+        header: null,
     };
+
+
+    showHidePedometerModal = () => this.setState({pedometerModalVisible: !this.state.pedometerModalVisible});
+
+    editStepGoal = (goal) => {
+        this.setState({
+        pedometerModalVisible: !this.state.pedometerModalVisible,
+        stepGoal: parseInt(goal, 10),
+    })
+    console.log(goal);
+}
 
     render() {
         return (
@@ -31,9 +54,19 @@ export default class HomeScreen extends React.Component {
                     style = {styles.logo}/>
                 <View style = {styles.lineStyle}/>
                 <ScrollView style = {styles.ScrollView} >
-                    <PedometerProgressGraph stepsWalked={1000} goal={7000} />
+                    <TouchableOpacity onPress={() => this.showHidePedometerModal()}>
+                        <PedometerProgressGraph 
+                            stepsWalked={this.state.stepsWalked} 
+                            goal={this.state.stepGoal} />
+                    </TouchableOpacity>
                     { /*TODO: put exercise list in here*/ } 
                 </ScrollView>
+                <ModalPedometerGoal 
+                    visible={this.state.pedometerModalVisible}
+                    hideModal={this.showHidePedometerModal.bind(this)}
+                    acceptChange={this.editStepGoal.bind(this)}
+                    goal={this.state.stepGoal}
+                    steps={this.state.stepsWalked}/>
             </View>);
         }
     }

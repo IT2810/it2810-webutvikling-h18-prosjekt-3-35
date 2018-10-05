@@ -21,6 +21,12 @@ export class PedometerProgressGraph extends Component {
 
     componentDidMount = () => this.calculateProgress(this.props.stepsWalked, this.props.goal);
 
+    componentDidUpdate = (prevProps) => {
+        if (prevProps.goal !== this.props.goal || prevProps.stepsWalked !== this.props.stepsWalked) {
+            this.calculateProgress(this.props.stepsWalked, this.props.goal);
+        }
+    }
+
     calculateProgress = (stepsWalked, goal) => this.setState({
         progress: (stepsWalked / goal)
     });
