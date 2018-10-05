@@ -1,9 +1,9 @@
 import React from 'react';
 import {AsyncStorage, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Card, Paragraph, Title} from 'react-native-paper';
 import {PedometerProgressGraph} from '../components/PedometerGraph';
-import {AreaChartExample} from '../components/ExampleGraph';
+// import {AreaChartExample} from '../components/ExampleGraph';
 import {ModalPedometerGoal} from '../components/ModalPedometerGoal';
+import {ExerciseCards} from "../components/ExerciseCards";
 
 const logoSource = '../assets/images/pmm.png';
 const dailyGoal = 'dailyGoal';
@@ -12,7 +12,6 @@ export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            exercises: ['Markløft', 'Knebøy', 'Benkpress'],
             pedometerModalVisible: false,
             stepsWalked: 1000,
             stepGoal: 10000,
@@ -23,7 +22,7 @@ export default class HomeScreen extends React.Component {
         header: null,
     };
 
-    componentDidMount = () => this.retrieveData(dailyGoal);
+    componentDidMount = () => this.retrievePedometerData(dailyGoal);
 
     saveData = async (location, data) => {
         try {
@@ -31,18 +30,18 @@ export default class HomeScreen extends React.Component {
         } catch (error) {
             console.warn(error);
         }
-    }
-    
-    retrieveData = async (location) => {
+    };
+
+    retrievePedometerData = async (location) => {
         try {
-            const value = await AsyncStorage.getItem(location);
+            const values = await AsyncStorage.getItem(location);
             this.setState({
-                stepGoal: Number(JSON.parse(value))
+                exercises: (JSON.parse(values)),
             });
         } catch (error) {
             console.warn(error);
         }
-    }
+    };
 
     showHidePedometerModal = () => this.setState({pedometerModalVisible: !this.state.pedometerModalVisible});
 
@@ -52,20 +51,9 @@ export default class HomeScreen extends React.Component {
             stepGoal: parseInt(goal, 10),
         });
         this.saveData(dailyGoal, goal);
-    }
-
-    getExerciseCards = () => {
-        return this.state.exercises.map(ex => (
-            <Card key={ex}>
-                <Card.Content>
-                    <Title>{ex}</Title>
-                </Card.Content>
-            </Card>
-        ));
-    }
+    };
 
     render() {
-        const exerciseList = this.getExerciseCards();
         return (
             <View style={styles.container}>
                 <Image
@@ -78,7 +66,7 @@ export default class HomeScreen extends React.Component {
                             stepsWalked={this.state.stepsWalked}
                             goal={this.state.stepGoal}/>
                     </TouchableOpacity>
-                    {exerciseList}
+                    <ExerciseCards/>
                 </ScrollView>
                 <ModalPedometerGoal
                     visible={this.state.pedometerModalVisible}
@@ -100,6 +88,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     logo: {
+        position: 'absolute',
+        zIndex:1000,
+        top: 38,
         marginTop: 18,
         marginBottom: 5,
         height: 100,
@@ -116,5 +107,8 @@ const styles = StyleSheet.create({
         borderBottomColor: 'lightgray',
         backgroundColor: 'lightgray',
         marginBottom: 10,
+    },
+    card: {
+        marginBottom: 2,
     }
 });
