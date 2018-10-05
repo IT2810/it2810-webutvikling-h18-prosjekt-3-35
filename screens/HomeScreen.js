@@ -65,7 +65,8 @@ export default class HomeScreen extends React.Component {
                     visible={this.state.pedometerModalVisible}
                     hideModal={this.showHidePedometerModal.bind(this)}
                     acceptChange={this.editStepGoal.bind(this)}
-                    goal={this.state.stepGoal}/>
+                    goal={this.state.stepGoal}
+                    steps={this.state.stepsWalked}/>
             </View>);
         }
     }
