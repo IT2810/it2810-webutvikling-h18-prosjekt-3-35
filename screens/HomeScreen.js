@@ -1,13 +1,20 @@
 import React from 'react';
 import {
-  Platform,
-  ScrollView,
-  Image,
-  StyleSheet,
-  View
-  } from 'react-native';
-import { DatePicker } from '../components/DatePicker';
-
+    Platform,
+    ScrollView,
+    Image,
+    StyleSheet,
+    View
+} from 'react-native';
+import {
+    DatePicker
+} from '../components/DatePicker';
+import {
+    PedometerProgressGraph
+} from '../components/PedometerGraph';
+import {
+    AreaChartExample
+} from '../components/ExampleGraph';
 
 const logoSource = '../assets/images/pmm.png';
 
@@ -18,17 +25,18 @@ export default class HomeScreen extends React.Component {
 
     render() {
         return (
-          <View style={styles.container}>
-              <Image
-                source={require(logoSource)}
-                style={styles.logo} />
-              <View style={styles.lineStyle} />
-              <ScrollView style={styles.ScrollView}>
-                  {/*TODO: put exercise list in here*/}
-              </ScrollView>
-          </View>);
+            <View style = {styles.container}>
+                <Image 
+                    source = {require(logoSource)}
+                    style = {styles.logo}/>
+                <View style = {styles.lineStyle}/>
+                <ScrollView style = {styles.ScrollView} >
+                    <PedometerProgressGraph stepsWalked={1000} goal={7000} />
+                    { /*TODO: put exercise list in here*/ } 
+                </ScrollView>
+            </View>);
+        }
     }
-}
 
 const styles = StyleSheet.create({
     container: {
@@ -54,5 +62,6 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderBottomColor: 'lightgray',
         backgroundColor: 'lightgray',
+        marginBottom: 10,
     }
 });
