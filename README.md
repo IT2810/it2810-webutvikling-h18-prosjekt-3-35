@@ -21,3 +21,4 @@ All the cards from Projects have been used to create issues, the issues will be 
 - https://github.com/mmazzarolo/react-native-modal-datetime-picker
 - https://github.com/JesperLekland/react-native-svg-charts
     - (Depends on) https://github.com/react-native-community/react-native-svg
+- https://github.com/callstack/react-native-paper
