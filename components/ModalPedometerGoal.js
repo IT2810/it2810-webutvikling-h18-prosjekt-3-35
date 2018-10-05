@@ -10,6 +10,8 @@ import {
     TextInput,
     Button,
     Alert,
+    Keyboard,
+    TouchableWithoutFeedback,
 } from 'react-native';
 
 const backButtonText = "Back";
@@ -20,6 +22,12 @@ export class ModalPedometerGoal extends Component {
         super(props);
         this.state = {
             goal: this.props.goal,
+        }
+    }
+
+    componentDidUpdate = (prevProps) => {
+        if (prevProps.goal !== this.props.goal) {
+            this.setState({goal: this.props.goal});
         }
     }
     
@@ -35,31 +43,33 @@ export class ModalPedometerGoal extends Component {
                         onRequestClose={() => {
                             Alert.alert('Modal has been closed.');
                         }}>
-                        <View style={styles.modalContainer}>
-                            <View style={styles.stateText}>
-                                <Text style={styles.text}>You have walked {this.props.steps} steps</Text>
-                                <Text style={styles.text}>Your daily goal is {this.state.goal} steps</Text>
-                            </View>
-                            <View style={styles.textInputRow}>
-                                <Text>Edit goal steps:</Text>       
-                                <TextInput
-                                    style={styles.inputField}
-                                    defaultValue={String(this.props.goal)}
-                                    keyboardType={'numeric'}
-                                    onChangeText={(number) => this.setState({goal: number})}/>
-                            </View>
-                            <View style={styles.buttonRow}>
-                                <Button
-                                title={backButtonText}
-                                onPress={() => this.props.hideModal()}
-                                />
+                            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                                <View style={styles.modalContainer}>
+                                    <View style={styles.stateText}>
+                                        <Text style={styles.text}>You have walked {this.props.steps} steps</Text>
+                                        <Text style={styles.text}>Your daily goal is {this.state.goal} steps</Text>
+                                    </View>
+                                    <View style={styles.textInputRow}>
+                                        <Text>Edit goal steps:</Text>  
+                                            <TextInput
+                                                style={styles.inputField}
+                                                defaultValue={String(this.props.goal)}
+                                                keyboardType={'numeric'}
+                                                onChangeText={(number) => this.setState({goal: number})}/>                            
+                                    </View>
+                                    <View style={styles.buttonRow}>
+                                        <Button
+                                        title={backButtonText}
+                                        onPress={() => this.props.hideModal()}
+                                        />
 
-                                <Button 
-                                title={acceptButtonText}
-                                onPress={() => this.props.acceptChange(this.state.goal)}
-                                />
-                            </View>
-                        </View>
+                                        <Button 
+                                        title={acceptButtonText}
+                                        onPress={() => this.props.acceptChange(this.state.goal)}
+                                        />
+                                    </View>
+                                </View>
+                            </TouchableWithoutFeedback>
                     </Modal>
                 </View>
             );
@@ -70,16 +80,16 @@ export class ModalPedometerGoal extends Component {
 
 const styles = StyleSheet.create({
     modalContainer: {
-        margin: 50,
+        flexDirection: 'column',
         flex: 1,
-        justifyContent: 'center',
+        margin: 20,
     },
     inputField: {
         padding: 5,
         textAlign: 'center',
     },
     textInputRow: {
-        flex: 2,
+        flex: 1,
         flexDirection: 'column',
         paddingBottom: 20,
     },
@@ -89,7 +99,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     stateText: {
-        flex: 2,
+        flex: 1,
         marginTop: 20,
         marginBottom: 20,
     },
