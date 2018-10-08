@@ -2,8 +2,6 @@
 
 exports[`App snapshot <HomeScreen> Test mål, skritt gått, og om pedo er aktiv eller ei 1`] = `undefined`;
 
-exports[`App snapshot <PedometerProgressGraph> Test om mål nåd 1`] = `undefined`;
-
 exports[`App snapshot renders the loading screen 1`] = `null`;
 
 exports[`App snapshot renders the root without loading screen 1`] = `

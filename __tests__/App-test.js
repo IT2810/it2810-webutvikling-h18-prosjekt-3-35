@@ -33,7 +33,7 @@ describe('App snapshot', () => {
             console.log(instance._fiber.stateNode.state);
 
              expect(instance._fiber.stateNode.state.stepsWalked).toEqual(1000);
-             expect(instance._fiber.stateNode.state.stepGoal).toEqual(500);
+             expect(instance._fiber.stateNode.state.stepGoal).toEqual(10000);
              expect(instance._fiber.stateNode.state.pedometerModalVisible).toEqual(false);
 
             expect(inst.props).toMatchSnapshot();
