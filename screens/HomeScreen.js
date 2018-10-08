@@ -14,9 +14,6 @@ import {
     PedometerProgressGraph
 } from '../components/PedometerGraph';
 import {
-    AreaChartExample
-} from '../components/ExampleGraph';
-import {
     ModalPedometerGoal
 } from '../components/ModalPedometerGoal';
 
