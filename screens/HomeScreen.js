@@ -38,7 +38,16 @@ export default class HomeScreen extends Component {
         header: null,
     };
 
-    componentDidMount = () => this.retrieveData(dailyGoal);
+    componentDidMount = () => {
+        this.retrieveData(dailyGoal);
+        this.setState({stepsWalked:this.props.stepCount});
+    };
+
+    componentDidUpdate = (prevProps) => {
+        if (prevProps.stepCount !== this.props.stepCount) {
+            this.setState({stepsWalked:this.props.stepCount});
+        }
+    }
 
     saveData = async (location, data) => {
         try {
