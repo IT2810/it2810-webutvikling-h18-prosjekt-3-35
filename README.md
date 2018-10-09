@@ -6,6 +6,7 @@ PMM is an iOS and Android application that motivates the user to create exercise
 ### Functionality
 
 ### Design
+We are basing a lot of the design on Google's material design and using the third party library Paper which allows for easy implementation of the material design guidelines.
 
 ### Testing (Jest)
 
@@ -21,4 +22,5 @@ All the cards from Projects have been used to create issues, the issues will be 
 - https://github.com/mmazzarolo/react-native-modal-datetime-picker
 - https://github.com/JesperLekland/react-native-svg-charts
     - (Depends on) https://github.com/react-native-community/react-native-svg
+- https://github.com/callstack/react-native-paper
 - https://github.com/callstack/react-native-paper
