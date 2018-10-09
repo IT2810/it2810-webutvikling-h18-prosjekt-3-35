@@ -30,13 +30,24 @@ describe('App snapshot', () => {
 
             let instance = inst.root;
 
-            console.log(instance._fiber.stateNode.state);
+            console.log(instance);
 
              expect(instance._fiber.stateNode.state.stepsWalked).toEqual(1000);
              expect(instance._fiber.stateNode.state.stepGoal).toEqual(10000);
              expect(instance._fiber.stateNode.state.pedometerModalVisible).toEqual(false);
 
             expect(inst.props).toMatchSnapshot();
+
+      //              ------Test button example------
+            const saveButton = instance.find(
+                (el) => el.type == 'button'
+                    && el.children
+                    && el.children[0] == 'backButtonText'
+            );
+            
+            expect(button.props.disabled).toEqual(true);
+
+
 
         });
     });
