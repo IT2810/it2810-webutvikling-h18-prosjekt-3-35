@@ -4,11 +4,17 @@ import { AppLoading, Asset, Font, Icon } from 'expo';
 
 import AppNavigator from './navigation/AppNavigator';
 import HomeScreen from './screens/HomeScreen';
+import PedometerSenor from './components/PedometerSensor';
 
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
+    stepCount: 0,
   };
+
+  updateSteps = (steps) => {
+    this.setState({stepCount:parseInt(steps,10)})
+  }
 
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
@@ -23,10 +29,11 @@ export default class App extends React.Component {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <HomeScreen />
-          {/*
-          This is the navbar
-          <AppNavigator />*/}
+          <HomeScreen stepCount={this.state.stepCount} />
+          {/* This stops the pedometer functionality to remove the bug 'google id = 0' while in dev
+            <PedometerSenor updateSteps={this.updateSteps} />
+            */
+          }
         </View>
       );
     }
