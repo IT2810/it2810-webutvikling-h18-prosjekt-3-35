@@ -22,6 +22,12 @@ describe('App snapshot', () => {
     expect(tree).toMatchSnapshot();
   });
   
+    it('renders the root without loading screen', async () => {
+      const tree = renderer.create(<App skipLoadingScreen />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+
+  
     describe('<HomeScreen>', () => {
         it('Test mål, skritt gått, og om pedo er aktiv eller ei', () => {
 
