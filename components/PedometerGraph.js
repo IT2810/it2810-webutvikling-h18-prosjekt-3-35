@@ -7,9 +7,6 @@ import {
     View,
     Text,
 } from 'react-native';
-import {
-    ProgressCircle
-} from 'react-native-svg-charts';
 
 export class PedometerProgressGraph extends Component {
     constructor(props) {

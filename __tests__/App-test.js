@@ -2,6 +2,9 @@ import 'react-native';
 import React from 'react';
 import App from '../App';
 import PedometerProgressGraph from '../screens/HomeScreen';
+import {ModalPedometerGoal} from '../components/ModalPedometerGoal';
+import {backButtonText} from '../components/ModalPedometerGoal';
+import {acceptButtonText} from '../components/ModalPedometerGoal';
 import {stepsWalked} from '../screens/HomeScreen';
 import {goal} from '../screens/HomeScreen';
 import {goalResutText} from '../components/PedometerGraph';
@@ -38,22 +41,23 @@ describe('App snapshot', () => {
 
             expect(inst.props).toMatchSnapshot();
 
-      //              ------Test button example------
-            const saveButton = instance.find(
-                (el) => el.type == 'button'
-                    && el.children
-                    && el.children[0] == 'backButtonText'
-            );
-            
-            expect(button.props.disabled).toEqual(true);
-
-
-
         });
     });
 
-  it('renders the root without loading screen', async () => {
-    const tree = renderer.create(<App skipLoadingScreen />).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
+test('rendrer knapp med gitt props avhengig av tittel', () => {
+  const component = renderer.create(
+    <ModalPedometerGoal onClick={() => {}} title={backButtonText} />
+  );
+
+  expect(component.toJSON()).toMatchSnapshot();
+
+
+   const component2 = renderer.create(
+      <ModalPedometerGoal onClick={() => {}} title={acceptButtonText} />
+   );
+
+   expect(component2.toJSON()).toMatchSnapshot();
+
+});
+
 });
