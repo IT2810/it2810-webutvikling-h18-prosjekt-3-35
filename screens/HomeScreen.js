@@ -12,6 +12,16 @@ export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            exercises: [
+                {name: 'Markløft',
+                goal: 100,
+                unit: 'kg'},
+                {name: 'Knebøy',
+                goal: 80,
+                unit: 'kg'},
+                {name: 'Benkpress',
+                goal: 60,
+                unit: 'kg'}],
             pedometerModalVisible: false,
             stepsWalked: 1000,
             stepGoal: 10000,
@@ -41,7 +51,7 @@ export default class HomeScreen extends React.Component {
         }
     };
 
-    retrievePedometerData = async (location) => {
+    retrieveData = async (location) => {
         try {
             const values = await AsyncStorage.getItem(location);
             this.setState({
@@ -63,6 +73,7 @@ export default class HomeScreen extends React.Component {
     };
 
     render() {
+        console.log("Homescreen RENDER");
         return (
             <View style={styles.container}>
                 <Image
@@ -75,7 +86,7 @@ export default class HomeScreen extends React.Component {
                             stepsWalked={this.state.stepsWalked}
                             goal={this.state.stepGoal}/>
                     </TouchableOpacity>
-                    <ExerciseCards/>
+                    <ExerciseCards exercises={JSON.stringify(this.state.exercises)}/>
                 </ScrollView>
                 <ModalPedometerGoal
                     visible={this.state.pedometerModalVisible}

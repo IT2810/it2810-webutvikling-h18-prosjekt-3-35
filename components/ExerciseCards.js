@@ -1,39 +1,57 @@
 import React, {Component} from 'react';
 import {Card, Title} from "react-native-paper";
-import {AsyncStorage, StyleSheet} from "react-native";
+import {View, StyleSheet} from "react-native";
 
 export class ExerciseCards extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            exercises: [
-                {name: 'Markløft'},
-                {name: 'Knebøy'},
-                {name: 'Benkpress'}],
-        }
     }
 
-    // componentDidMount = () => this.retrieveExerciseData('exercises');
-
-    retrieveExerciseData = async (location) => {
-        try {
-            const value = await AsyncStorage.getItem(location);
-            this.setState({
-                exercises: JSON.parse(value),
-            });
-        } catch (error) {
-            console.warn(error);
+    exercisesToCard = () => {
+        const cardList = [];
+        console.log("cardlist:", Array.isArray(cardList));
+        let exercises = JSON.parse(this.props.exercises);
+        console.log("exercises:", Array.isArray(exercises));
+        console.log("exercises type: ", typeof exercises);
+        for (let i = 0; i < exercises.length; i++){
+            cardList.push(
+                <Card style={styles.card} key={exercises[i].name}>
+                    <Card.Content>
+                        <Title>{exercises[i].name}</Title>
+                    </Card.Content>
+                </Card>
+            )
         }
+        //console.log(exercises);
+        return cardList;
     };
 
+
     render() {
-        return this.state.exercises.map(ex => (
-            <Card style={styles.card} key={ex.name}>
-                <Card.Content>
-                    <Title>{ex.name}</Title>
-                </Card.Content>
-            </Card>
-        ));
+        const exercises = this.exercisesToCard();
+        console.log(Array.isArray(exercises));
+        // console.log(this.props.exercises);
+        // const exercises = this.props.exercises;
+        // console.log(exercises);
+        // for (let i = 0; i < exercises.length; i++){
+        //     console.log(exercises[i]);
+        //     console.log(exercises[i].name);
+        // // }
+        // console.log(Array.isArray(exercises));
+        // console.log('prop', typeof this.props.exercises);
+        // console.log("HALLO?", exercises[0].name);
+        // return exercises.map(ex => (
+        //     <Card style={styles.card} key={ex.name}>
+        //         <Card.Content>
+        //             <Title>{ex.name}</Title>
+        //         </Card.Content>
+        //     </Card>
+        // ));
+        return (
+            <View>
+                {exercises}
+            </View>
+        )
     }
 }
 
