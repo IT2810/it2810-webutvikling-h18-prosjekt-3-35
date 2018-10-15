@@ -36,9 +36,18 @@ export default class App extends Component {
   };
 
   render() {
-    return(
-      <RootStack />
-    );
+    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+      return (
+        <AppLoading
+          startAsync={this._loadResourcesAsync}
+          onError={this._handleLoadingError}
+          onFinish={this._handleFinishLoading}
+        />);
+    } else {
+      return(
+        <RootStack />
+      );
+    }
   }
 }
 
