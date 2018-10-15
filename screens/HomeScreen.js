@@ -90,8 +90,15 @@ export default class HomeScreen extends Component {
         this.setState({exercises:exerciseLists});
     }
 
-    openExerciseScreen = () => {
-        this.props.navigation.navigate('ExerciseGraph');
+    openExerciseScreen = (exercise) => {
+        this.props.navigation.navigate('ExerciseGraph', {
+            title: exercise.title,
+            weightType: exercise.weightType,
+            personalNotes: exercise.personalNotes,
+            reps: exercise.reps,
+            sets: exercise.sets,
+            goal: exercise.goal,
+        });
     }
 
     createExerciseCards = () => {
@@ -101,7 +108,7 @@ export default class HomeScreen extends Component {
             exerciseCards.push(
                 <TouchableOpacity 
                     key={num}
-                    onPress={() => this.openExerciseScreen()} >
+                    onPress={() => this.openExerciseScreen(exerciseLists[num])} >
                     <ExerciseCard 
                         title={exerciseLists[num].title}
                     />
