@@ -4,10 +4,17 @@ import { AppLoading, Asset, Font, Icon } from 'expo';
 
 import AppNavigator from './navigation/AppNavigator';
 import HomeScreen from './screens/HomeScreen';
-import StepGoalScreen from './screens/StepGoalScreen'
+import StepGoalScreen from './screens/StepGoalScreen';
+import CreateExerciseScreen from './screens/CreateExerciseScreen'
 import { createStackNavigator } from 'react-navigation';
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoadingComplete: false,
+    }
+  }
 
   _loadResourcesAsync = async () => {
     return Promise.all([
@@ -54,6 +61,7 @@ export default class App extends Component {
 const RootStack = createStackNavigator({
     Home: HomeScreen,
     StepGoal: StepGoalScreen,
+    CreateExercise: CreateExerciseScreen,
   },
   {
     initialRouteName: 'Home',
