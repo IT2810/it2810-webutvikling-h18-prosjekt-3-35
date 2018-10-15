@@ -5,7 +5,8 @@ import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import HomeScreen from './screens/HomeScreen';
 import StepGoalScreen from './screens/StepGoalScreen';
-import CreateExerciseScreen from './screens/CreateExerciseScreen'
+import CreateExerciseScreen from './screens/CreateExerciseScreen';
+import GraphingScreen from './screens/GraphingScreen';
 import { createStackNavigator } from 'react-navigation';
 
 export default class App extends Component {
@@ -62,10 +63,11 @@ const RootStack = createStackNavigator({
     Home: HomeScreen,
     StepGoal: StepGoalScreen,
     CreateExercise: CreateExerciseScreen,
+    ExerciseGraph: GraphingScreen,
   },
   {
     initialRouteName: 'Home',
-})
+});
 
 const styles = StyleSheet.create({
   container: {
