@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 
 const backButtonText = "Back";
-const acceptButtonText = "OK"
+const acceptButtonText = "OK";
 
 export class ModalPedometerGoal extends Component {
     constructor(props) {

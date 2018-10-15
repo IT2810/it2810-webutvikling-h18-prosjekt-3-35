@@ -2,7 +2,7 @@ import 'react-native';
 import React from 'react';
 import App from '../App';
 import PedometerProgressGraph from '../screens/HomeScreen';
-import {ModalPedometerGoal} from '../components/ModalPedometerGoal';
+import ModalPedometerGoal from '../screens/HomeScreen';   
 import {backButtonText} from '../components/ModalPedometerGoal';
 import {acceptButtonText} from '../components/ModalPedometerGoal';
 import {stepsWalked} from '../screens/HomeScreen';
@@ -39,8 +39,6 @@ describe('App snapshot', () => {
 
             let instance = inst.root;
 
-            console.log(instance);
-
              expect(instance._fiber.stateNode.state.stepsWalked).toEqual(1000);
              expect(instance._fiber.stateNode.state.stepGoal).toEqual(10000);
              expect(instance._fiber.stateNode.state.pedometerModalVisible).toEqual(false);
@@ -55,7 +53,10 @@ test('rendrer knapp med gitt props avhengig av tittel', () => {
     <ModalPedometerGoal onClick={() => {}} title={backButtonText} />
   );
 
+              console.log(component.root);
+
   expect(component.toJSON()).toMatchSnapshot();
+  expect(component.root._fiber.stateNode.props.title).toEqual(undefined);
 
 
    const component2 = renderer.create(

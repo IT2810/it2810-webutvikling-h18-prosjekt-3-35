@@ -51,6 +51,78 @@ exports[`App snapshot renders the root without loading screen 1`] = `
 </View>
 `;
 
-exports[`App snapshot rendrer knapp med gitt props avhengig av tittel 1`] = `null`;
+exports[`App snapshot rendrer knapp med gitt props avhengig av tittel 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "lightgray",
+      "flex": 1,
+      "justifyContent": "center",
+      "paddingHorizontal": 20,
+    }
+  }
+>
+  <Image
+    source={1}
+    style={
+      Object {
+        "height": 100,
+        "marginBottom": 5,
+        "marginTop": 18,
+        "width": 100,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "alignSelf": "stretch",
+        "backgroundColor": "lightgray",
+        "borderBottomColor": "lightgray",
+        "borderColor": "black",
+        "borderWidth": 3,
+        "marginBottom": 10,
+      }
+    }
+  />
+</View>
+`;
 
-exports[`App snapshot rendrer knapp med gitt props avhengig av tittel 2`] = `null`;
+exports[`App snapshot rendrer knapp med gitt props avhengig av tittel 2`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "lightgray",
+      "flex": 1,
+      "justifyContent": "center",
+      "paddingHorizontal": 20,
+    }
+  }
+>
+  <Image
+    source={1}
+    style={
+      Object {
+        "height": 100,
+        "marginBottom": 5,
+        "marginTop": 18,
+        "width": 100,
+      }
+    }
+  />
+  <View
+    style={
+      Object {
+        "alignSelf": "stretch",
+        "backgroundColor": "lightgray",
+        "borderBottomColor": "lightgray",
+        "borderColor": "black",
+        "borderWidth": 3,
+        "marginBottom": 10,
+      }
+    }
+  />
+</View>
+`;
