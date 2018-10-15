@@ -8,7 +8,6 @@ import {
     Text,
     TextInput,
     Button,
-    Alert,
     Keyboard,
     TouchableWithoutFeedback,
 } from 'react-native';
@@ -36,9 +35,8 @@ export default class PedometerGoal extends Component {
     }
 
     updateDisabledbutton = (number) => {
-        const buttonStatus = (this.state.goal === number) ? true: false ;
+        const buttonStatus = (this.state.goal === number) ? true:false ;
         this.setState({disabledButton:buttonStatus });
-        console.log(buttonStatus);
     }
     
     render() {
@@ -56,14 +54,14 @@ export default class PedometerGoal extends Component {
                         </View>
                         <View style={styles.textInputRow}>
                             <Text>Edit goal steps:</Text>  
-                                <TextInput
-                                    style={styles.inputField}
-                                    defaultValue={String(stepGoal)}
-                                    keyboardType={'numeric'}
-                                    onChangeText={(number) => {
-                                        this.setState({goal: number})
-                                        this.updateDisabledbutton(number)
-                                }}/>                            
+                            <TextInput
+                                style={styles.inputField}
+                                defaultValue={String(stepGoal)}
+                                keyboardType={'numeric'}
+                                onChangeText={(number) => {
+                                    this.setState({goal: number})
+                                    this.updateDisabledbutton(number)
+                            }}/>                            
                         </View>
                         <View style={styles.buttonRow}>
                             <Button 

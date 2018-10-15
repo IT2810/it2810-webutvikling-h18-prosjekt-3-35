@@ -6,21 +6,22 @@ import {
     Image,
     StyleSheet,
     View,
+    Text,
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
-import { DatePicker } from '../components/DatePicker';
 import { PedometerProgressGraph } from '../components/PedometerGraph';
 import { PedometerSensor } from '../components/PedometerSensor';
 
 const logoSource = '../assets/images/pmm.png';
+const addExerciseButton = '../assets/images/plus.png';
 const dailyGoal = 'dailyGoal';
 
 export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            stepsWalked: 0,
+            stepsWalked: 1000,
             stepGoal: 10000,
         }
     }
@@ -30,14 +31,7 @@ export default class HomeScreen extends Component {
 
     componentDidMount = () => {
         this.retrieveData(dailyGoal);
-        this.setState({stepsWalked:this.props.stepCount});
     };
-
-    componentDidUpdate = (prevProps) => {
-        if (prevProps.stepCount !== this.props.stepCount) {
-            this.setState({stepsWalked:this.props.stepCount});
-        }
-    }
 
     saveData = async (location, data) => {
         try {
@@ -50,6 +44,9 @@ export default class HomeScreen extends Component {
     retrieveData = async (location) => {
         try {
             const value = await AsyncStorage.getItem(location);
+            if (Number(JSON.parse(value)) === undefined) {
+                value = 0;
+            }
             this.setState({
                 stepGoal: Number(JSON.parse(value))
             });
@@ -68,7 +65,16 @@ export default class HomeScreen extends Component {
             stepGoal: parseInt(goal, 10),
         });
         this.saveData(dailyGoal, goal);
-}
+
+    }
+    
+    createExercise = (title, weightType, personalNotes, reps, sets) => {
+        console.log("Title: " + title);
+        console.log("weightType: " + weightType);
+        console.log("personalNotes: " + personalNotes);
+        console.log("reps: " + reps);
+        console.log("sets: " + sets);
+    }
 
     render() {
         return (
@@ -89,11 +95,29 @@ export default class HomeScreen extends Component {
                             stepsWalked={this.state.stepsWalked} 
                             goal={this.state.stepGoal} />
                     </TouchableOpacity>
-                    { /*TODO: put exercise list in here*/ } 
+                    <View>
+                        <TouchableOpacity
+                        style={styles.addExerciseView}
+                        onPress={() =>
+                            this.props.navigation.navigate('CreateExercise', {
+                                createExercise: this.createExercise.bind(this)
+                            })}>
+                            <Text>Add exercise</Text>
+                            <Image
+                                //Icon made by wwww.flaticon.com/authors/freepik
+                                source= {require(addExerciseButton)}
+                                style= {styles.addExerciseSymbol}
+                                />
+                        </TouchableOpacity>
+                    </View>
+                        { /*TODO: put exercise list in here*/ } 
+                    
                 </ScrollView>
+                {/*
                 <PedometerSensor 
                     updateSteps={this.updateSteps.bind(this)} 
                 />
+                */}
             </View>);
         }
     }
@@ -111,6 +135,18 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         height: 100,
         width: 100
+    },
+    addExerciseView:  {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        backgroundColor: '#fff',
+        padding: 5,
+    },
+    addExerciseSymbol : {
+        height: 25,
+        width: 25,
+        marginLeft: 5,
     },
     ScrollView: {
         backgroundColor: 'lightgray',
