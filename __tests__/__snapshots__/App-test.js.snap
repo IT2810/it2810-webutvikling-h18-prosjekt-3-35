@@ -6,47 +6,163 @@ exports[`App snapshot renders the loading screen 1`] = `null`;
 
 exports[`App snapshot renders the root without loading screen 1`] = `
 <View
+  onLayout={[Function]}
   style={
     Object {
-      "backgroundColor": "#fff",
       "flex": 1,
     }
   }
 >
   <View
+    onMoveShouldSetResponder={[Function]}
+    onMoveShouldSetResponderCapture={[Function]}
+    onResponderEnd={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderReject={[Function]}
+    onResponderRelease={[Function]}
+    onResponderStart={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    onStartShouldSetResponderCapture={[Function]}
     style={
-      Object {
-        "alignItems": "center",
-        "backgroundColor": "lightgray",
-        "flex": 1,
-        "justifyContent": "center",
-        "paddingHorizontal": 20,
-      }
+      Array [
+        Object {
+          "flex": 1,
+          "flexDirection": "column-reverse",
+        },
+        Object {
+          "backgroundColor": "#000",
+        },
+      ]
     }
   >
-    <Image
-      source={1}
-      style={
-        Object {
-          "height": 100,
-          "marginBottom": 5,
-          "marginTop": 18,
-          "width": 100,
-        }
-      }
-    />
     <View
       style={
         Object {
-          "alignSelf": "stretch",
-          "backgroundColor": "lightgray",
-          "borderBottomColor": "lightgray",
-          "borderColor": "black",
-          "borderWidth": 3,
-          "marginBottom": 10,
+          "flex": 1,
         }
       }
-    />
+    >
+      <View
+        accessibilityElementsHidden={false}
+        pointerEvents="auto"
+        style={
+          Object {
+            "backgroundColor": "#E9E9EF",
+            "bottom": 0,
+            "left": 0,
+            "opacity": 1,
+            "paddingTop": 0,
+            "position": "absolute",
+            "right": 0,
+            "shadowColor": "black",
+            "shadowOffset": Object {
+              "height": 0,
+              "width": 0,
+            },
+            "shadowOpacity": 0.2,
+            "shadowRadius": 5,
+            "top": 0,
+            "transform": Array [
+              Object {
+                "translateX": 0,
+              },
+              Object {
+                "translateY": 0,
+              },
+            ],
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "lightgray",
+              "flex": 1,
+              "justifyContent": "center",
+              "paddingHorizontal": 20,
+            }
+          }
+        >
+          <Image
+            source={1}
+            style={
+              Object {
+                "height": 100,
+                "marginBottom": 5,
+                "marginTop": 18,
+                "width": 100,
+              }
+            }
+          />
+          <View
+            style={
+              Object {
+                "alignSelf": "stretch",
+                "backgroundColor": "lightgray",
+                "borderBottomColor": "lightgray",
+                "borderColor": "black",
+                "borderWidth": 3,
+                "marginBottom": 10,
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
+    <View
+      onLayout={[Function]}
+      pointerEvents="box-none"
+      style={
+        Object {
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "backgroundColor": "#FFF",
+            "transform": Array [
+              Object {
+                "translateX": -750,
+              },
+            ],
+          }
+        }
+      >
+        <View
+          onLayout={[Function]}
+          pointerEvents="box-none"
+          style={
+            Object {
+              "backgroundColor": "#FFF",
+              "borderBottomColor": "#A7A7AA",
+              "borderBottomWidth": 0.5,
+              "height": 64,
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 20,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "flex": 1,
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
   </View>
 </View>
 `;
