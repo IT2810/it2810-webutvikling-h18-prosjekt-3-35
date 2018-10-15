@@ -6,30 +6,21 @@ import {
     Image,
     StyleSheet,
     View,
+    Text,
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
-import {
-    DatePicker
-} from '../components/DatePicker';
-import {
-    PedometerProgressGraph
-} from '../components/PedometerGraph';
-import {
-    AreaChartExample
-} from '../components/ExampleGraph';
-import {
-    ModalPedometerGoal
-} from '../components/ModalPedometerGoal';
+import { PedometerProgressGraph } from '../components/PedometerGraph';
+import { PedometerSensor } from '../components/PedometerSensor';
 
 const logoSource = '../assets/images/pmm.png';
+const addExerciseButton = '../assets/images/plus.png';
 const dailyGoal = 'dailyGoal';
 
 export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pedometerModalVisible: false,
             stepsWalked: 1000,
             stepGoal: 10000,
         }
@@ -40,14 +31,7 @@ export default class HomeScreen extends Component {
 
     componentDidMount = () => {
         this.retrieveData(dailyGoal);
-        this.setState({stepsWalked:this.props.stepCount});
     };
-
-    componentDidUpdate = (prevProps) => {
-        if (prevProps.stepCount !== this.props.stepCount) {
-            this.setState({stepsWalked:this.props.stepCount});
-        }
-    }
 
     saveData = async (location, data) => {
         try {
@@ -60,6 +44,9 @@ export default class HomeScreen extends Component {
     retrieveData = async (location) => {
         try {
             const value = await AsyncStorage.getItem(location);
+            if (Number(JSON.parse(value)) === undefined) {
+                value = 0;
+            }
             this.setState({
                 stepGoal: Number(JSON.parse(value))
             });
@@ -68,7 +55,9 @@ export default class HomeScreen extends Component {
         }
     }
 
-    showHidePedometerModal = () => this.setState({pedometerModalVisible: !this.state.pedometerModalVisible});
+    updateSteps = (steps) => {
+        this.setState({stepsWalked:parseInt(steps,10)})
+      }
 
     editStepGoal = (goal) => {
         this.setState({
@@ -76,7 +65,16 @@ export default class HomeScreen extends Component {
             stepGoal: parseInt(goal, 10),
         });
         this.saveData(dailyGoal, goal);
-}
+
+    }
+    
+    createExercise = (title, weightType, personalNotes, reps, sets) => {
+        console.log("Title: " + title);
+        console.log("weightType: " + weightType);
+        console.log("personalNotes: " + personalNotes);
+        console.log("reps: " + reps);
+        console.log("sets: " + sets);
+    }
 
     render() {
         return (
@@ -86,19 +84,40 @@ export default class HomeScreen extends Component {
                     style = {styles.logo}/>
                 <View style = {styles.lineStyle}/>
                 <ScrollView style = {styles.ScrollView} >
-                    <TouchableOpacity onPress={() => this.showHidePedometerModal()}>
+                    <TouchableOpacity onPress={() => 
+                        this.props.navigation.navigate('StepGoal', {
+                            currentSteps: this.state.stepsWalked,
+                            stepGoal: this.state.stepGoal,
+                            acceptChange: this.editStepGoal.bind(this),
+                        })
+                    }>
                         <PedometerProgressGraph 
                             stepsWalked={this.state.stepsWalked} 
                             goal={this.state.stepGoal} />
                     </TouchableOpacity>
-                    { /*TODO: put exercise list in here*/ } 
+                    <View>
+                        <TouchableOpacity
+                        style={styles.addExerciseView}
+                        onPress={() =>
+                            this.props.navigation.navigate('CreateExercise', {
+                                createExercise: this.createExercise.bind(this)
+                            })}>
+                            <Text>Add exercise</Text>
+                            <Image
+                                //Icon made by wwww.flaticon.com/authors/freepik
+                                source= {require(addExerciseButton)}
+                                style= {styles.addExerciseSymbol}
+                                />
+                        </TouchableOpacity>
+                    </View>
+                        { /*TODO: put exercise list in here*/ } 
+                    
                 </ScrollView>
-                <ModalPedometerGoal 
-                    visible={this.state.pedometerModalVisible}
-                    hideModal={this.showHidePedometerModal.bind(this)}
-                    acceptChange={this.editStepGoal.bind(this)}
-                    goal={this.state.stepGoal}
-                    steps={this.state.stepsWalked}/>
+                {/*
+                <PedometerSensor 
+                    updateSteps={this.updateSteps.bind(this)} 
+                />
+                */}
             </View>);
         }
     }
@@ -116,6 +135,18 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         height: 100,
         width: 100
+    },
+    addExerciseView:  {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        backgroundColor: '#fff',
+        padding: 5,
+    },
+    addExerciseSymbol : {
+        height: 25,
+        width: 25,
+        marginLeft: 5,
     },
     ScrollView: {
         backgroundColor: 'lightgray',
