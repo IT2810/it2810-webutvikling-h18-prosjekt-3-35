@@ -4,7 +4,7 @@ import React, {
 import { Text, View } from 'react-native';
 import { Pedometer, Expo } from 'expo';
 
-export default class PedometerSensor extends Component {
+export class PedometerSensor extends Component {
     constructor(props) {
         super(props);
         this.state =  {

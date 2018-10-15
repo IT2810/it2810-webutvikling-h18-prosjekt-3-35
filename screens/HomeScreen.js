@@ -9,18 +9,9 @@ import {
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
-import {
-    DatePicker
-} from '../components/DatePicker';
-import {
-    PedometerProgressGraph
-} from '../components/PedometerGraph';
-import {
-    AreaChartExample
-} from '../components/ExampleGraph';
-import {
-    ModalPedometerGoal
-} from '../components/ModalPedometerGoal';
+import { DatePicker } from '../components/DatePicker';
+import { PedometerProgressGraph } from '../components/PedometerGraph';
+import { PedometerSensor } from '../components/PedometerSensor';
 
 const logoSource = '../assets/images/pmm.png';
 const dailyGoal = 'dailyGoal';
@@ -29,8 +20,7 @@ export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pedometerModalVisible: false,
-            stepsWalked: 1000,
+            stepsWalked: 0,
             stepGoal: 10000,
         }
     }
@@ -68,7 +58,9 @@ export default class HomeScreen extends Component {
         }
     }
 
-    showHidePedometerModal = () => this.setState({pedometerModalVisible: !this.state.pedometerModalVisible});
+    updateSteps = (steps) => {
+        this.setState({stepsWalked:parseInt(steps,10)})
+      }
 
     editStepGoal = (goal) => {
         this.setState({
@@ -86,19 +78,22 @@ export default class HomeScreen extends Component {
                     style = {styles.logo}/>
                 <View style = {styles.lineStyle}/>
                 <ScrollView style = {styles.ScrollView} >
-                    <TouchableOpacity onPress={() => this.showHidePedometerModal()}>
+                    <TouchableOpacity onPress={() => 
+                        this.props.navigation.navigate('StepGoal', {
+                            currentSteps: this.state.stepsWalked,
+                            stepGoal: this.state.stepGoal,
+                            acceptChange: this.editStepGoal.bind(this),
+                        })
+                    }>
                         <PedometerProgressGraph 
                             stepsWalked={this.state.stepsWalked} 
                             goal={this.state.stepGoal} />
                     </TouchableOpacity>
                     { /*TODO: put exercise list in here*/ } 
                 </ScrollView>
-                <ModalPedometerGoal 
-                    visible={this.state.pedometerModalVisible}
-                    hideModal={this.showHidePedometerModal.bind(this)}
-                    acceptChange={this.editStepGoal.bind(this)}
-                    goal={this.state.stepGoal}
-                    steps={this.state.stepsWalked}/>
+                <PedometerSensor 
+                    updateSteps={this.updateSteps.bind(this)} 
+                />
             </View>);
         }
     }
