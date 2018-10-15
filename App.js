@@ -1,43 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 
 import AppNavigator from './navigation/AppNavigator';
 import HomeScreen from './screens/HomeScreen';
-import PedometerSenor from './components/PedometerSensor';
+import StepGoalScreen from './screens/StepGoalScreen'
+import { createStackNavigator } from 'react-navigation';
 
-export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false,
-    stepCount: 0,
-  };
-
-  updateSteps = (steps) => {
-    this.setState({stepCount:parseInt(steps,10)})
-  }
-
-  render() {
-    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
-      return (
-        <AppLoading
-          startAsync={this._loadResourcesAsync}
-          onError={this._handleLoadingError}
-          onFinish={this._handleFinishLoading}
-        />
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <HomeScreen stepCount={this.state.stepCount} />
-          {/* This stops the pedometer functionality to remove the bug 'google id = 0' while in dev
-            <PedometerSenor updateSteps={this.updateSteps} />
-            */
-          }
-        </View>
-      );
-    }
-  }
+export default class App extends Component {
 
   _loadResourcesAsync = async () => {
     return Promise.all([
@@ -64,7 +34,21 @@ export default class App extends React.Component {
   _handleFinishLoading = () => {
     this.setState({ isLoadingComplete: true });
   };
+
+  render() {
+    return(
+      <RootStack />
+    );
+  }
 }
+
+const RootStack = createStackNavigator({
+    Home: HomeScreen,
+    StepGoal: StepGoalScreen,
+  },
+  {
+    initialRouteName: 'Home',
+})
 
 const styles = StyleSheet.create({
   container: {
