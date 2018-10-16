@@ -32,6 +32,7 @@ export default class HomeScreen extends Component {
         header: null,
     };
 
+
     componentDidMount = () => {
         this.retrieveData([dailyGoalLocation, exerciseListsLocation]);
     };
@@ -145,7 +146,7 @@ export default class HomeScreen extends Component {
                             <Text>Add exercise</Text>
                             <Image
                                 //Icon made by wwww.flaticon.com/authors/freepik
-                                source= {require(addExerciseButton)}
+                                source= {require(logoSource)}
                                 style= {styles.addExerciseSymbol}
                                 />
                         </TouchableOpacity>

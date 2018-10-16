@@ -18,9 +18,16 @@
     "react": "16.3.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-native-modal-datetime-picker": "^6.0.0",
+    "react-native-svg": "^7.1.2",
+    "react-native-svg-charts": "^5.2.0",
     "react-navigation": "^2.16.0"
   },
   "devDependencies": {
-    "jest-expo": "30.0.0"
+    "babel-jest": "^23.6.0",
+    "jest": "^23.6.0",
+    "jest-expo": "30.0.0",
+    "react-addons-test-utils": "^15.6.2",
+    "react-dom": "^16.5.2",
+    "react-test-renderer": "^16.5.2"
   }
 }
