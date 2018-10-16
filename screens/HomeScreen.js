@@ -9,16 +9,15 @@ import {
     Text,
     TouchableOpacity,
     AsyncStorage,
-    FlatList,
 } from 'react-native';
 import { PedometerProgressGraph } from '../components/PedometerGraph';
 import { ExerciseCard } from '../components/ExerciseCard';
 import { PedometerSensor } from '../components/PedometerSensor';
 
 const logoSource = '../assets/images/pmm.png';
-//const addExerciseButton = '../assets/images/plus.png';
-const dailyGoal = 'dailyGoal';
-//const exerciseLists = 'exerciseCards';
+const addExerciseButton = '../assets/images/plus.png';
+const dailyGoalLocation = 'dailyGoal';
+const exerciseListsLocation = 'exerciseCards';
 
 export default class HomeScreen extends Component {
     constructor(props) {
@@ -35,12 +34,8 @@ export default class HomeScreen extends Component {
 
 
     componentDidMount = () => {
-        this.retrieveData(dailyGoal);
+        this.retrieveData([dailyGoalLocation, exerciseListsLocation]);
     };
-
-    componentDidUpdate = () => {
-
-    }
 
     saveData = async (location, data) => {
         try {
@@ -50,15 +45,18 @@ export default class HomeScreen extends Component {
         }
     }
 
-    retrieveData = async (location) => {
+    retrieveData = async (locations) => {
         try {
-            const value = await AsyncStorage.getItem(location);
-            if (Number(JSON.parse(value)) === undefined) {
-                value = 0;
-            }
-            this.setState({
-                stepGoal: Number(JSON.parse(value))
-            });
+            await AsyncStorage.multiGet(locations)
+                .then((response) =>{
+                    const dailyGoal = JSON.parse(response[0][1]);
+                    const exerciseList = JSON.parse(response[1][1]);
+                    this.setState({
+                        stepGoal:dailyGoal,
+                        exercises:exerciseList,
+                    })
+                });
+            
         } catch (error) {
             console.warn(error);
         }
@@ -73,8 +71,7 @@ export default class HomeScreen extends Component {
             pedometerModalVisible: !this.state.pedometerModalVisible,
             stepGoal: parseInt(goal, 10),
         });
-        this.saveData(dailyGoal, goal);
-
+        this.saveData(dailyGoalLocation, goal);
     }
     
     createExercise = (title, weightType, personalNotes, reps, sets) => {
@@ -85,9 +82,9 @@ export default class HomeScreen extends Component {
             reps: reps,
             sets: sets,
         }
-
         const exerciseLists = this.state.exercises;
         exerciseLists.push(newExercise);
+        this.saveData(exerciseListsLocation, exerciseLists);
         this.setState({exercises:exerciseLists});
     }
 
@@ -105,6 +102,7 @@ export default class HomeScreen extends Component {
     createExerciseCards = () => {
         const exerciseLists = this.state.exercises;
         const exerciseCards = []
+        //console.log(exerciseLists);
         for (const num in exerciseLists) {
             exerciseCards.push(
                 <TouchableOpacity 
