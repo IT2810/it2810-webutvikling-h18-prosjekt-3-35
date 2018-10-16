@@ -1,30 +1,31 @@
-import React from 'react';
-import {AsyncStorage, Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {PedometerProgressGraph} from '../components/PedometerGraph';
-// import {AreaChartExample} from '../components/ExampleGraph';
-import {ModalPedometerGoal} from '../components/ModalPedometerGoal';
+import React, { Component } from 'react';
+import {
+    ScrollView,
+    Image,
+    StyleSheet,
+    View,
+    Text,
+    TouchableOpacity,
+    AsyncStorage,
+} from 'react-native';
+import { PedometerProgressGraph } from '../components/PedometerGraph';
+import { ExerciseCard } from '../components/ExerciseCard';
 import {ExerciseCards} from "../components/ExerciseCards";
+import { PedometerSensor } from '../components/PedometerSensor';
 
 const logoSource = '../assets/images/pmm.png';
-const dailyGoal = 'dailyGoal';
+const addExerciseButton = '../assets/images/plus.png';
+const dailyGoalLocation = 'dailyGoal';
+const exerciseListsLocation = 'exerciseCards';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            exercises: [
-                {name: 'Markløft',
-                goal: 100,
-                unit: 'kg'},
-                {name: 'Knebøy',
-                goal: 80,
-                unit: 'kg'},
-                {name: 'Benkpress',
-                goal: 60,
-                unit: 'kg'}],
             pedometerModalVisible: false,
             stepsWalked: 1000,
             stepGoal: 10000,
+            exercises: [],
         }
     }
 
@@ -32,16 +33,10 @@ export default class HomeScreen extends React.Component {
         header: null,
     };
 
-    componentDidMount = () => {
-        this.retrieveData(dailyGoal);
-        this.setState({stepsWalked:this.props.stepCount});
-    };
 
-    componentDidUpdate = (prevProps) => {
-        if (prevProps.stepCount !== this.props.stepCount) {
-            this.setState({stepsWalked:this.props.stepCount});
-        }
-    }
+    componentDidMount = () => {
+        this.retrieveData([dailyGoalLocation, exerciseListsLocation]);
+    };
 
     saveData = async (location, data) => {
         try {
@@ -51,51 +46,119 @@ export default class HomeScreen extends React.Component {
         }
     };
 
-    retrieveData = async (location) => {
+    retrieveData = async (locations) => {
         try {
-            const values = await AsyncStorage.getItem(location);
-            this.setState({
-                exercises: (JSON.parse(values)),
-            });
+            await AsyncStorage.multiGet(locations)
+                .then((response) =>{
+                    const dailyGoal = JSON.parse(response[0][1]);
+                    const exerciseList = JSON.parse(response[1][1]);
+                    this.setState({
+                        stepGoal:dailyGoal,
+                        exercises:exerciseList,
+                    })
+                });
         } catch (error) {
             console.warn(error);
         }
     };
 
-    showHidePedometerModal = () => this.setState({pedometerModalVisible: !this.state.pedometerModalVisible});
+    updateSteps = (steps) => {
+        this.setState({stepsWalked:parseInt(steps,10)})
+      };
 
     editStepGoal = (goal) => {
         this.setState({
             pedometerModalVisible: !this.state.pedometerModalVisible,
             stepGoal: parseInt(goal, 10),
         });
-        this.saveData(dailyGoal, goal);
+        this.saveData(dailyGoalLocation, goal);
+    };
+    
+    createExercise = (title, weightType, personalNotes, reps, sets) => {
+        const newExercise = {
+            title: title,
+            weightType: weightType, 
+            personalNotes: personalNotes,
+            reps: reps,
+            sets: sets,
+        };
+        const exerciseLists = this.state.exercises;
+        exerciseLists.push(newExercise);
+        this.saveData(exerciseListsLocation, exerciseLists);
+        this.setState({exercises:exerciseLists});
     };
 
+    openExerciseScreen = (exercise) => {
+        this.props.navigation.navigate('ExerciseGraph', {
+            title: exercise.title,
+            weightType: exercise.weightType,
+            personalNotes: exercise.personalNotes,
+            reps: exercise.reps,
+            sets: exercise.sets,
+            goal: exercise.goal,
+        });
+    };
+
+    createExerciseCards = () => {
+        const exerciseLists = this.state.exercises;
+        const exerciseCards = []
+        //console.log(exerciseLists);
+        for (const num in exerciseLists) {
+            exerciseCards.push(
+                <TouchableOpacity 
+                    key={num}
+                    onPress={() => this.openExerciseScreen(exerciseLists[num])} >
+                    <ExerciseCard 
+                        title={exerciseLists[num].title}
+                    />
+                </TouchableOpacity>);
+        }
+        return exerciseCards;
+    }
+
     render() {
-        console.log("Homescreen RENDER");
+        const exerciseCards = this.createExerciseCards();
         return (
-            <View style={styles.container}>
-                <Image
-                    source={require(logoSource)}
-                    style={styles.logo}/>
-                <View style={styles.lineStyle}/>
-                <ScrollView style={styles.ScrollView}>
-                    <TouchableOpacity onPress={() => this.showHidePedometerModal()}>
-                        <PedometerProgressGraph
-                            stepsWalked={this.state.stepsWalked}
-                            goal={this.state.stepGoal}/>
+            <View style = {styles.container}>
+                <Image 
+                    source = {require(logoSource)}
+                    style = {styles.logo}/>
+                <View style = {styles.lineStyle}/>
+                <ScrollView style = {styles.ScrollView} >
+                    <TouchableOpacity onPress={() => 
+                        this.props.navigation.navigate('StepGoal', {
+                            currentSteps: this.state.stepsWalked,
+                            stepGoal: this.state.stepGoal,
+                            acceptChange: this.editStepGoal.bind(this),
+                        })
+                    }>
+                        <PedometerProgressGraph 
+                            stepsWalked={this.state.stepsWalked} 
+                            goal={this.state.stepGoal} />
                     </TouchableOpacity>
-                    <ExerciseCards exercises={JSON.stringify(this.state.exercises)}/>
+                    <View>
+                        <TouchableOpacity
+                        style={styles.addExerciseView}
+                        onPress={() =>
+                            this.props.navigation.navigate('CreateExercise', {
+                                createExercise: this.createExercise.bind(this)
+                            })}>
+                            <Text>Add exercise</Text>
+                            <Image
+                                //Icon made by wwww.flaticon.com/authors/freepik
+                                source= {require(logoSource)}
+                                style= {styles.addExerciseSymbol}
+                                />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.cardContainer}>
+                        {exerciseCards}
+                    </View>
                 </ScrollView>
-                <ModalPedometerGoal
-                    visible={this.state.pedometerModalVisible}
-                    hideModal={this.showHidePedometerModal.bind(this)}
-                    acceptChange={this.editStepGoal.bind(this)}
-                    goal={this.state.stepGoal}
-                    steps={this.state.stepsWalked}/>
-            </View>
-        );
+                {/*<PedometerSensor */}
+                    {/*updateSteps={this.updateSteps.bind(this)} */}
+                {/*/>*/}
+            </View>);
     }
 }
 
@@ -116,6 +179,18 @@ const styles = StyleSheet.create({
         height: 100,
         width: 105
     },
+    addExerciseView:  {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        backgroundColor: '#fff',
+        padding: 5,
+    },
+    addExerciseSymbol : {
+        height: 25,
+        width: 25,
+        marginLeft: 5,
+    },
     ScrollView: {
         backgroundColor: 'lightgray',
         alignSelf: 'stretch',
@@ -130,5 +205,10 @@ const styles = StyleSheet.create({
     },
     card: {
         marginBottom: 2,
+    },
+    cardContainer: {
+        flexDirection: 'column',
+        padding: 8,
+        justifyContent: 'space-between',
     }
 });
