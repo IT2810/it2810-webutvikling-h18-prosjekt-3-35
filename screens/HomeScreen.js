@@ -9,13 +9,16 @@ import {
     Text,
     TouchableOpacity,
     AsyncStorage,
+    FlatList,
 } from 'react-native';
 import { PedometerProgressGraph } from '../components/PedometerGraph';
+import { ExerciseCard } from '../components/ExerciseCard';
 import { PedometerSensor } from '../components/PedometerSensor';
 
 const logoSource = '../assets/images/pmm.png';
 //const addExerciseButton = '../assets/images/plus.png';
 const dailyGoal = 'dailyGoal';
+//const exerciseLists = 'exerciseCards';
 
 export default class HomeScreen extends Component {
     constructor(props) {
@@ -23,6 +26,7 @@ export default class HomeScreen extends Component {
         this.state = {
             stepsWalked: 1000,
             stepGoal: 10000,
+            exercises: [],
         }
     }
     static navigationOptions = {
@@ -33,6 +37,10 @@ export default class HomeScreen extends Component {
     componentDidMount = () => {
         this.retrieveData(dailyGoal);
     };
+
+    componentDidUpdate = () => {
+
+    }
 
     saveData = async (location, data) => {
         try {
@@ -70,14 +78,48 @@ export default class HomeScreen extends Component {
     }
     
     createExercise = (title, weightType, personalNotes, reps, sets) => {
-        console.log("Title: " + title);
-        console.log("weightType: " + weightType);
-        console.log("personalNotes: " + personalNotes);
-        console.log("reps: " + reps);
-        console.log("sets: " + sets);
+        const newExercise = {
+            title: title,
+            weightType: weightType, 
+            personalNotes: personalNotes,
+            reps: reps,
+            sets: sets,
+        }
+
+        const exerciseLists = this.state.exercises;
+        exerciseLists.push(newExercise);
+        this.setState({exercises:exerciseLists});
+    }
+
+    openExerciseScreen = (exercise) => {
+        this.props.navigation.navigate('ExerciseGraph', {
+            title: exercise.title,
+            weightType: exercise.weightType,
+            personalNotes: exercise.personalNotes,
+            reps: exercise.reps,
+            sets: exercise.sets,
+            goal: exercise.goal,
+        });
+    }
+
+    createExerciseCards = () => {
+        const exerciseLists = this.state.exercises;
+        const exerciseCards = []
+        for (const num in exerciseLists) {
+            exerciseCards.push(
+                <TouchableOpacity 
+                    key={num}
+                    onPress={() => this.openExerciseScreen(exerciseLists[num])} >
+                    <ExerciseCard 
+                        title={exerciseLists[num].title}
+                    />
+                </TouchableOpacity>);
+        }
+        return exerciseCards;
     }
 
     render() {
+        const exerciseCards = this.createExerciseCards();
         return (
             <View style = {styles.container}>
                 <Image 
@@ -111,8 +153,9 @@ export default class HomeScreen extends Component {
                                 />
                         </TouchableOpacity>
                     </View>
-                        { /*TODO: put exercise list in here*/ } 
-                    
+                    <View style={styles.cardContainer}>
+                        {exerciseCards}
+                    </View>
                 </ScrollView>
                 {/*
                 <PedometerSensor 
@@ -160,5 +203,9 @@ const styles = StyleSheet.create({
         borderBottomColor: 'lightgray',
         backgroundColor: 'lightgray',
         marginBottom: 10,
+    },
+    cardContainer: {
+        padding: 8,
+        justifyContent: 'space-between',
     }
 });

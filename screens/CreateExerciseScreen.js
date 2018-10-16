@@ -29,6 +29,7 @@ export default class CreateExerciseScreen extends Component {
             personalNotes: '',
             reps: 8,
             sets: 3,
+            goal: '',
         }
     }
 
@@ -36,8 +37,12 @@ export default class CreateExerciseScreen extends Component {
         const titleString = this.state.title.toString();
         const repsString = this.state.reps.toString();
         const setsString = this.state.sets.toString();
+        const goalString = this.state.goal.toString();
 
-        return titleString === '' ||  repsString === '' ||  setsString === '' ? true : false;
+        return titleString === '' || 
+            repsString === '' ||  
+            setsString === '' ||
+            goalString === '' ? true : false;
     }
 
     PickerWeightList = () => {
@@ -53,14 +58,17 @@ export default class CreateExerciseScreen extends Component {
         return pickerList;
     }
 
-    createPersonalNotesView = () => {
+    createTextInputView = (keyboardType, defaultValue, title, state) => {
         return (
             <View>
-                <Text>Personal Notes:</Text>
+                <Text>{title}:</Text>
                 <TextInput 
-                    onChangeText={(text) => this.setState({personalNotes:text})}/>
+                    onChangeText={(input) => this.setState({[state]:input})}
+                    keyboardType={keyboardType}
+                    defaultValue={defaultValue}/>
             </View>
         );
+    
     }
 
     createWeightTypePicker = () => {
@@ -77,53 +85,18 @@ export default class CreateExerciseScreen extends Component {
         );
     }
 
-    createExerciseView = () => {
-        return (
-            <View>
-                <Text>Exercise:</Text>
-                <TextInput 
-                    onChangeText={(text) => this.setState({title:text})}/>
-            </View>
-        );
-    }
-
-    createSetsView = () => {
-        return (
-            <View>
-                <Text>Sets:</Text>
-                <TextInput
-                    keyboardType={'numeric'}
-                    defaultValue={String(this.state.sets)}
-                    onChangeText={(number) => {
-                        this.setState({sets:number})
-                    }}/>
-            </View>
-        );
-    }
-
-    createRepsView = () => {
-        return (
-            <View>
-                <Text>Reps:</Text>
-                <TextInput
-                    keyboardType={'numeric'}
-                    defaultValue={String(this.state.reps)}
-                    onChangeText={(number) => this.setState({reps:number})}/>
-            </View>
-        );
-    }
-
     create 
 
     render() {
         const disabledButton = this.isButtonDisabled();
         const {navigation} = this.props;
         const {params} = this.props.navigation.state;
-        const exerciseView = this.createExerciseView();
         const weightTypePicker = this.createWeightTypePicker();
-        const personalNotesView = this.createPersonalNotesView();
-        const setsView = this.createSetsView();
-        const repsView = this.createRepsView();
+        const personalNotesView = this.createTextInputView('default', '', 'Personal Notes', 'personalNotes');
+        const exerciseView = this.createTextInputView('default', '', 'Exercise Name', 'title');
+        const setsView = this.createTextInputView('numeric', String(this.state.sets), 'Sets', 'sets');
+        const repsView = this.createTextInputView('numeric', String(this.state.reps), 'Reps', 'reps');
+        const goalView = this.createTextInputView('numeric', '', 'Weight Goal', 'goal')
         return (
             <ScrollView>
                 <TouchableWithoutFeedback 
@@ -137,6 +110,7 @@ export default class CreateExerciseScreen extends Component {
                         {setsView}
                         {repsView}
                         {personalNotesView}
+                        {goalView}
 
                         <Button 
                             disabled={disabledButton}
@@ -148,6 +122,7 @@ export default class CreateExerciseScreen extends Component {
                                     this.state.personalNotes,
                                     this.state.reps,
                                     this.state.sets,
+                                    this.state.goal,
                                     );
                                 navigation.goBack();
                             }}
