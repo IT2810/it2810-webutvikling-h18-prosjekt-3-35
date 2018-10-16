@@ -74,14 +74,15 @@ export default class HomeScreen extends React.Component {
         this.saveData(dailyGoalLocation, goal);
     };
     
-    createExercise = (title, weightType, personalNotes, reps, sets) => {
+    createExercise = (title, weightType, personalNotes, reps, sets, goal) => {
         const newExercise = {
             title: title,
             weightType: weightType, 
             personalNotes: personalNotes,
             reps: reps,
             sets: sets,
-        };
+            goal: goal,
+        }
         const exerciseLists = this.state.exercises;
         exerciseLists.push(newExercise);
         this.saveData(exerciseListsLocation, exerciseLists);
@@ -89,6 +90,7 @@ export default class HomeScreen extends React.Component {
     };
 
     openExerciseScreen = (exercise) => {
+        console.log(exercise.goal);
         this.props.navigation.navigate('ExerciseGraph', {
             title: exercise.title,
             weightType: exercise.weightType,
@@ -155,9 +157,11 @@ export default class HomeScreen extends React.Component {
                         {exerciseCards}
                     </View>
                 </ScrollView>
-                {/*<PedometerSensor */}
-                    {/*updateSteps={this.updateSteps.bind(this)} */}
-                {/*/>*/}
+                {/*
+                    <PedometerSensor 
+                        updateSteps={this.updateSteps.bind(this)} 
+                    />
+                */}
             </View>);
     }
 }
