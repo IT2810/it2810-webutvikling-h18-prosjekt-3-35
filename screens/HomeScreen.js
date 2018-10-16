@@ -154,11 +154,9 @@ export default class HomeScreen extends Component {
                         {exerciseCards}
                     </View>
                 </ScrollView>
-                {/*
                 <PedometerSensor 
                     updateSteps={this.updateSteps.bind(this)} 
                 />
-                */}
             </View>);
         }
     }
@@ -202,6 +200,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     cardContainer: {
+        flexDirection: 'column',
         padding: 8,
         justifyContent: 'space-between',
     }
