@@ -8,7 +8,7 @@ import {
     Text,
     TextInput,
     Keyboard,
-    Picker,
+    Button,
     TouchableOpacity,
     ScrollView,
 } from 'react-native';
@@ -22,12 +22,9 @@ export default class CreateSession extends Component {
         super(props);
         this.state = {
             date: null,
+            goal: null,
             isDateTimePickerVisible:false,
         }
-    }
-
-    componentDidMount = () => {
-
     }
 
     getTimeText = (date) => {
@@ -43,6 +40,16 @@ export default class CreateSession extends Component {
         })
     }
 
+    createSession = () => {
+        const {navigation} = this.props;
+        const {params} = this.props.navigation.state;
+        params.createSession(
+            this.state.goal,
+            this.state.date,
+            );
+        navigation.goBack();
+    }
+
     hideDateTimePicker = () => this.setState({isDateTimePickerVisible:!this.state.isDateTimePickerVisible});
 
     render() {
@@ -51,8 +58,7 @@ export default class CreateSession extends Component {
         const goal = navigation.getParam('goal', '');
         const dateButtonText = this.state.date !== null ? this.getTimeText(this.state.date) : 'Select Date';
         const today = this.state.date === null ? new Date() : this.state.date;
-        console.log("Goal: " + goal);
-        console.log("Weight: " + weightType);
+        const buttonIsDisabled = (this.state.goal === null || this.state.date === null);
         return (
             <ScrollView>
                 <TouchableWithoutFeedback
@@ -62,11 +68,17 @@ export default class CreateSession extends Component {
                         <View>
                             <Text>How close were you to your goal of</Text>
                             <Text>{goal}{weightType}</Text>
-                            <TextInput />
+                            <TextInput 
+                                keyboardType={'numeric'}
+                                onChangeText={(text) => {
+                                    if (text === '') {
+                                        text = null;
+                                    }
+                                    this.setState({goal:text})}
+                                }/>
                         </View>
                         <TouchableOpacity
-                            onPress={() => this.setState({isDateTimePickerVisible:true})}
-                        >
+                            onPress={() => this.setState({isDateTimePickerVisible:true})}>
                             <Text style={styles.dateButton}>{dateButtonText}</Text>
                         </TouchableOpacity>
                         <DateTimePicker
@@ -75,6 +87,10 @@ export default class CreateSession extends Component {
                                 onConfirm = {this.handleDatePicked}
                                 onCancel = {this.hideDateTimePicker}
                             />
+                        <Button 
+                            title={'Add session to exercise'}
+                            disabled={buttonIsDisabled}
+                            onPress={() => this.createSession()}/>
                     </View>
                 </TouchableWithoutFeedback>
             </ScrollView>
@@ -84,7 +100,7 @@ export default class CreateSession extends Component {
 
 const styles = StyleSheet.create({
     container: {
-
+        padding: 10,
     },
     dateButton: {
         borderRadius: 1,
