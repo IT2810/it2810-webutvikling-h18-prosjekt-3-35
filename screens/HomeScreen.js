@@ -33,10 +33,24 @@ export default class HomeScreen extends Component {
         header: null,
     };
 
-    componentDidMount = () => {
-        this.retrieveData([dailyGoalLocation, exerciseListsLocation]);
-    };
+    // The mount function launches retrieval for the daily goal as well as the exercises created.
+    componentDidMount = () => this.retrieveData();
 
+    componentDidUpdate = () => {
+
+    }
+
+    //ExerciseNames is used to check if names are unique when creating a new exercise
+    updateUniqueNames = (exerciseList) => {
+        const exerciseNames = []
+        for (const num in exerciseList) {
+            const name = exerciseList[num].title;
+            exerciseNames.push(name);
+        }
+        return exerciseNames;
+    }
+
+    //Takes in a location for the data, as well as the data saved
     saveData = async (location, data) => {
         try {
             await AsyncStorage.setItem(location, JSON.stringify(data));
@@ -45,23 +59,17 @@ export default class HomeScreen extends Component {
         }
     }
 
-    retrieveData = async (locations) => {
+    //Uses a list of locations to retrieve the data. 
+    retrieveData = async () => {
+        const locations = [dailyGoalLocation, exerciseListsLocation];
         try {
             await AsyncStorage.multiGet(locations)
                 .then((response) =>{
                     let dailyGoal = JSON.parse(response[0][1]);
                     let exerciseList = JSON.parse(response[1][1]);
-                    const exerciseNames = [];
-                    if (dailyGoal === null) {
-                        dailyGoal = 10000;
-                    }
-                    if (exerciseList === null) {
-                        exerciseList = [];
-                    }
-                    for (const num in exerciseList) {
-                        const name = exerciseList[num].title;
-                        exerciseNames.push(name);
-                    }
+                    dailyGoal = dailyGoal === null ? 10000 : dailyGoal;
+                    exerciseList = exerciseList === null ? [] : exerciseList;
+                    const exerciseNames = this.updateUniqueNames(exerciseList);
                     this.setState({
                         stepGoal:dailyGoal,
                         exercises:exerciseList,
@@ -73,10 +81,11 @@ export default class HomeScreen extends Component {
         }
     }
 
-    updateSteps = (steps) => {
-        this.setState({stepsWalked:parseInt(steps,10)})
-      }
+    //This function is sent down to PedometerSensor that updates the steps 
+    updateSteps = (steps) => this.setState({stepsWalked:parseInt(steps,10)})
 
+    //This function is sent down to StepGoalScreen to update the step goal, 
+    //and saves the updated goal
     editStepGoal = (goal) => {
         this.setState({
             pedometerModalVisible: !this.state.pedometerModalVisible,
@@ -85,6 +94,8 @@ export default class HomeScreen extends Component {
         this.saveData(dailyGoalLocation, goal);
     }
     
+    //This function is sent down to CreateExerciseScreen and creates an exercise
+    //based on data retrieved, as well as saving it 
     createExercise = (title, weightType, personalNotes, reps, sets, goal) => {
         const newExercise = {
             title: title,
@@ -96,16 +107,39 @@ export default class HomeScreen extends Component {
         }
         const exerciseLists = this.state.exercises;
         exerciseLists.push(newExercise);
+        const exerciseNames = this.updateUniqueNames(exerciseLists);
         this.saveData(exerciseListsLocation, exerciseLists);
-        this.setState({exercises:exerciseLists});
+        this.setState({
+            exercises:exerciseLists,
+            exerciseNames:exerciseNames,
+        });
     }
 
-    openExerciseScreen = (exercise) => {
+    //Opens the exercise screen and sends down a prop
+    openExerciseGraphScreen = (exercise) => {
         this.props.navigation.navigate('ExerciseGraph', {
             exercise:exercise,
         });
     }
 
+    //Opens the StepGoalScreen and sends down props and a function
+    openStepGoalScreen = () => {
+        this.props.navigation.navigate('StepGoal', {
+            currentSteps: this.state.stepsWalked,
+            stepGoal: this.state.stepGoal,
+            acceptChange: this.editStepGoal.bind(this),
+        })
+    }
+
+    //Opens the CreateExereciseScreen 
+    openCreateExerciseScreen = () => {
+        this.props.navigation.navigate('CreateExercise', {
+            createExercise: this.createExercise.bind(this),
+            exerciseNames: this.state.exerciseNames,
+        })
+    }
+
+    //Creates the ExerciseCards that are rendered
     createExerciseCards = () => {
         const exerciseLists = this.state.exercises;
         const exerciseCards = []
@@ -113,7 +147,7 @@ export default class HomeScreen extends Component {
             exerciseCards.push(
                 <TouchableOpacity 
                     key={num}
-                    onPress={() => this.openExerciseScreen(exerciseLists[num])} >
+                    onPress={() => this.openExerciseGraphScreen(exerciseLists[num])} >
                     <ExerciseCard 
                         title={exerciseLists[num].title}
                     />
@@ -131,31 +165,20 @@ export default class HomeScreen extends Component {
                     style = {styles.logo}/>
                 <View style = {styles.lineStyle}/>
                 <ScrollView style = {styles.ScrollView} >
-                    <TouchableOpacity onPress={() => 
-                        this.props.navigation.navigate('StepGoal', {
-                            currentSteps: this.state.stepsWalked,
-                            stepGoal: this.state.stepGoal,
-                            acceptChange: this.editStepGoal.bind(this),
-                        })
-                    }>
+                    <TouchableOpacity onPress={() => this.openStepGoalScreen()}>
                         <PedometerProgressGraph 
                             stepsWalked={this.state.stepsWalked} 
                             goal={this.state.stepGoal} />
                     </TouchableOpacity>
                     <View>
                         <TouchableOpacity
-                        style={styles.addExerciseView}
-                        onPress={() =>
-                            this.props.navigation.navigate('CreateExercise', {
-                                createExercise: this.createExercise.bind(this),
-                                exerciseNames: this.state.exerciseNames,
-                            })}>
+                            style={styles.addExerciseView}
+                            onPress={() => this.openCreateExerciseScreen()} >
                             <Text>Add exercise</Text>
                             <Image
                                 //Icon made by wwww.flaticon.com/authors/freepik
                                 source= {require(addExerciseButton)}
-                                style= {styles.addExerciseSymbol}
-                                />
+                                style= {styles.addExerciseSymbol} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.cardContainer}>
