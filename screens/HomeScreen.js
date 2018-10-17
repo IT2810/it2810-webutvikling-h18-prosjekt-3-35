@@ -26,6 +26,7 @@ export default class HomeScreen extends Component {
             stepsWalked: 1000,
             stepGoal: 10000,
             exercises: [],
+            exerciseNames: []
         }
     }
     static navigationOptions = {
@@ -50,18 +51,23 @@ export default class HomeScreen extends Component {
                 .then((response) =>{
                     let dailyGoal = JSON.parse(response[0][1]);
                     let exerciseList = JSON.parse(response[1][1]);
+                    const exerciseNames = [];
                     if (dailyGoal === null) {
                         dailyGoal = 10000;
                     }
                     if (exerciseList === null) {
                         exerciseList = [];
                     }
+                    for (const num in exerciseList) {
+                        const name = exerciseList[num].title;
+                        exerciseNames.push(name);
+                    }
                     this.setState({
                         stepGoal:dailyGoal,
                         exercises:exerciseList,
+                        exerciseNames:exerciseNames,
                     })
                 });
-            
         } catch (error) {
             console.warn(error);
         }
@@ -95,21 +101,14 @@ export default class HomeScreen extends Component {
     }
 
     openExerciseScreen = (exercise) => {
-        console.log(exercise.goal);
         this.props.navigation.navigate('ExerciseGraph', {
-            title: exercise.title,
-            weightType: exercise.weightType,
-            personalNotes: exercise.personalNotes,
-            reps: exercise.reps,
-            sets: exercise.sets,
-            goal: exercise.goal,
+            exercise:exercise,
         });
     }
 
     createExerciseCards = () => {
         const exerciseLists = this.state.exercises;
         const exerciseCards = []
-        //console.log(exerciseLists);
         for (const num in exerciseLists) {
             exerciseCards.push(
                 <TouchableOpacity 
@@ -148,7 +147,8 @@ export default class HomeScreen extends Component {
                         style={styles.addExerciseView}
                         onPress={() =>
                             this.props.navigation.navigate('CreateExercise', {
-                                createExercise: this.createExercise.bind(this)
+                                createExercise: this.createExercise.bind(this),
+                                exerciseNames: this.state.exerciseNames,
                             })}>
                             <Text>Add exercise</Text>
                             <Image
