@@ -27,12 +27,14 @@ export default class CreateSession extends Component {
         }
     }
 
+    //Takes in a date and returns a text in the format (example) Mon 30 Jan
     getTimeText = (date) => {
         const weekday = weekdays[date.getDay()];
         const month = months[date.getMonth()];
         return weekday + ' ' + date.getDate() + ' ' + month;
     }
 
+    //When a date is selected, set in state
     handleDatePicked = (date) => {
         this.setState({
             date:date,
@@ -40,6 +42,7 @@ export default class CreateSession extends Component {
         })
     }
 
+    //Gives data to the prop function that will create a session, and goes back
     createSession = () => {
         const {navigation} = this.props;
         const {params} = this.props.navigation.state;
@@ -62,8 +65,7 @@ export default class CreateSession extends Component {
         return (
             <ScrollView>
                 <TouchableWithoutFeedback
-                    onPress={Keyboard.dismiss} accessible={false}
-                    >
+                    onPress={Keyboard.dismiss} accessible={false}>
                     <View style={styles.container}>
                         <View>
                             <Text>How close were you to your goal of</Text>
@@ -85,8 +87,7 @@ export default class CreateSession extends Component {
                                 date = {today}
                                 isVisible = {this.state.isDateTimePickerVisible}
                                 onConfirm = {this.handleDatePicked}
-                                onCancel = {this.hideDateTimePicker}
-                            />
+                                onCancel = {this.hideDateTimePicker}/>
                         <Button 
                             title={'Add session to exercise'}
                             disabled={buttonIsDisabled}
