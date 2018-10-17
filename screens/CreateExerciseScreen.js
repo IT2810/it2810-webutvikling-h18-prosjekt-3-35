@@ -11,6 +11,7 @@ import {
     Picker,
     Button,
     ScrollView,
+    Alert,
 } from 'react-native';
 
 const acceptButtonText = 'OK';
@@ -85,12 +86,39 @@ export default class CreateExerciseScreen extends Component {
         );
     }
 
+    buttonPressed = () => {
+        const uniqueNames = this.props.navigation.getParam('exerciseNames', []);
+        const {navigation} = this.props;
+        const {params} = this.props.navigation.state;
+        console.log(uniqueNames.includes(this.state.title))
+        if (uniqueNames.includes(this.state.title)) {
+            this.alertNameMessage();
+        } else {
+            params.createExercise( 
+                this.state.title,
+                this.state.weightType, 
+                this.state.personalNotes,
+                this.state.reps,
+                this.state.sets,
+                this.state.goal,
+                );
+            navigation.goBack();
+        }
+    }
+
+    alertNameMessage = () => {
+        Alert.alert(
+            'Exercise already esists',
+            'An exercise needs a unique name',
+            [{text: 'OK', onPress: () => console.log('OK Pressed')},],
+            { cancelable: false }
+          )
+    }
+
     create 
 
     render() {
         const disabledButton = this.isButtonDisabled();
-        const {navigation} = this.props;
-        const {params} = this.props.navigation.state;
         const weightTypePicker = this.createWeightTypePicker();
         const personalNotesView = this.createTextInputView('default', '', 'Personal Notes', 'personalNotes');
         const exerciseView = this.createTextInputView('default', '', 'Exercise Name', 'title');
@@ -116,15 +144,7 @@ export default class CreateExerciseScreen extends Component {
                             disabled={disabledButton}
                             title={acceptButtonText}
                             onPress={() => {
-                                params.createExercise(
-                                    this.state.title,
-                                    this.state.weightType, 
-                                    this.state.personalNotes,
-                                    this.state.reps,
-                                    this.state.sets,
-                                    this.state.goal,
-                                    );
-                                navigation.goBack();
+                                this.buttonPressed();
                             }}
                         />
                     </View>
