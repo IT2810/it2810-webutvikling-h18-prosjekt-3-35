@@ -19,26 +19,24 @@ export class PedometerProgressGraph extends Component {
         }
     }
 
+    //Updates the graph on mount
     componentDidMount = () => this.calculateProgress(this.props.stepsWalked, this.props.goal);
 
+    //Updates the graph when the goal or steps walked has changed
     componentDidUpdate = (prevProps) => {
         if (prevProps.goal !== this.props.goal || prevProps.stepsWalked !== this.props.stepsWalked) {
             this.calculateProgress(this.props.stepsWalked, this.props.goal);
         }
     }
 
-    calculateProgress = (stepsWalked, goal) => this.setState({
-        progress: (stepsWalked / goal)
-    });
+    //Calculates the progress used for the graph
+    calculateProgress = (stepsWalked, goal) => this.setState({progress: (stepsWalked / goal)});
 
+    //If the steps has reached or exceeded the goal it returns a positive text
     goalText = () => {
-        let returnText;
-        if (this.state.progress === 1 || this.state.progress > 1) {
-            returnText = <Text style={styles.resultText}>Du har nådd målet!</Text>
-        } else {
-            returnText = <View></View>
-        }
-
+        const returnText = (this.state.progress >= 1) ? 
+            <Text style={styles.resultText}>Du har nådd målet!</Text> :
+            <View></View>;
         return (
             <View>
                 <Text
