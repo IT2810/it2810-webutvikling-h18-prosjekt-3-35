@@ -10,15 +10,13 @@ We are basing a lot of the design on Google's material design and using the thir
 
 ### Testing (Jest)
 
-Testing:
-
 As there hasn’t been a new Update from enzyme, it is currently not compatible with React Native, and hence we ended up using the standard React Test Renderer combined with Jest, since it comes with the library itself, which means it’s always up-to-date and compatible. 
 
 This turned out a bit problematic as the documentation for the React Test Renderer is extremely light. 
 
-We utilized the create function to create a component tree such that we can set up the different tests. We also chose to use the .toJSON() function instead of the .toTree, as we only saw it necessary to return a JavaScript object representing the HTML output of our React Native components, and not the components structure itself in addition. 
+We utilized the create function to create a component tree such that we can set up the different tests. We also chose to use the .toJSON() function instead of the .toTree, as we only saw it necessary to return a JavaScript object representing the HTML output of our React Native components, and not the components structure itself, in addition. 
 
-The great thing about enzyme is the one can use CSS selectors to find what one needs, but the built in ReactTestRenderer supposedly has the .find() & .findAll(), findByProps() & .findAllByProps(), as well as findByType & findAllByType(). However, we decided that the way we would find components that we wanted tested would be through using expected(), created an instance from the root, and manually searched through he entire tree to find the component we wanted to test, making sure we got what we were after, as it proved to be a bit tricky to access states and props with jest. Example: 
+The great thing about enzyme is the one can use CSS selectors to find what one needs, which sadly doesn't work with the built in ReactTestRendererm hoever, it does have .find() & .findAll(), findByProps() & .findAllByProps(), as well as findByType & findAllByType(), all native functions for the sake of locating. Regardless, we decided that the way we would find components that we wanted tested would be through using expected(), created an instance from the root, and manually searched through he entire tree to find the component we wanted to test, making sure we got what we were after, as it proved to be a bit tricky to access states and props with jest. Example: 
 
  const inst = renderer.create(
      <PedometerProgressGraph returnText={stepsWalked}>
