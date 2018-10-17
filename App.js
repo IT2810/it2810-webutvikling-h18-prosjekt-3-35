@@ -7,6 +7,7 @@ import HomeScreen from './screens/HomeScreen';
 import StepGoalScreen from './screens/StepGoalScreen';
 import CreateExerciseScreen from './screens/CreateExerciseScreen';
 import GraphingScreen from './screens/GraphingScreen';
+import CreateSessionScreen from './screens/CreateSessionScreen';
 import { createStackNavigator } from 'react-navigation';
 
 export default class App extends Component {
@@ -64,6 +65,7 @@ const RootStack = createStackNavigator({
     StepGoal: StepGoalScreen,
     CreateExercise: CreateExerciseScreen,
     ExerciseGraph: GraphingScreen,
+    CreateSession: CreateSessionScreen,
   },
   {
     initialRouteName: 'Home',

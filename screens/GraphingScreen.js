@@ -45,11 +45,21 @@ export default class GraphingScreen extends Component {
         Alert.alert(
             'Unvalid date',
             message,
-            [
-              {text: 'OK', onPress: () => console.log('OK Pressed')},
-            ],
+            [{text: 'OK', onPress: () => console.log('OK Pressed')},],
             { cancelable: false }
           )
+    }
+
+    openCreateSessionScreen = () => {
+        const {navigation} = this.props;
+        console.log(navigation.getParam('title', 'No exercise name'));
+        console.log(navigation.getParam('weightType', 'No weight type'));
+        console.log(navigation.getParam('goal', 'No goal '));
+        this.props.navigation.navigate('CreateSession', {
+            weightType:navigation.getParam('weightType', ''),
+            exerciseTitle:navigation.getParam('title', ''),
+            goal:navigation.getParam('goal', ''),
+        });
     }
 
     handleDatePicked = (date) => {
@@ -96,7 +106,7 @@ export default class GraphingScreen extends Component {
                 </View>
                 <Button 
                     title={'Add new Session'}
-                    onPress={() => console.log("pressed")}/>
+                    onPress={() => this.openCreateSessionScreen()}/>
                 <DateTimePicker
                     date = {this.state.clickedDate}
                     isVisible = {this.state.isDateTimePickerVisible}
