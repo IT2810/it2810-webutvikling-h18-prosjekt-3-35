@@ -48,8 +48,14 @@ export default class HomeScreen extends Component {
         try {
             await AsyncStorage.multiGet(locations)
                 .then((response) =>{
-                    const dailyGoal = JSON.parse(response[0][1]);
-                    const exerciseList = JSON.parse(response[1][1]);
+                    let dailyGoal = JSON.parse(response[0][1]);
+                    let exerciseList = JSON.parse(response[1][1]);
+                    if (dailyGoal === null) {
+                        dailyGoal = 10000;
+                    }
+                    if (exerciseList === null) {
+                        exerciseList = [];
+                    }
                     this.setState({
                         stepGoal:dailyGoal,
                         exercises:exerciseList,
