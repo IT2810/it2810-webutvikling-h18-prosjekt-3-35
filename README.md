@@ -18,9 +18,11 @@ We are using Github's Projects functinality where we have seperated the project 
 #### Issues
 All the cards from Projects have been used to create issues, the issues will be added in commits. If someone has forgotten to reference the issue in an commit they will comment on the issue/commit and tag the appropriate issue/commit it references.
 
+### Known bugs
+- When going to the screen to change a daily goal and press OK it would crash, but changing the value (even to the same as it used to be) would not make it crash. Solved by disabling the button when not changing it.
+
 ### External libraries
 - https://github.com/mmazzarolo/react-native-modal-datetime-picker
 - https://github.com/JesperLekland/react-native-svg-charts
     - (Depends on) https://github.com/react-native-community/react-native-svg
-- https://github.com/callstack/react-native-paper
 - https://github.com/callstack/react-native-paper
