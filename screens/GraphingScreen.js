@@ -8,12 +8,14 @@ import {
     Button,
     TouchableOpacity,
     Alert,
+    AsyncStorage,
 } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const twoWeekstime = 12096e5;
+const sessionLocation = '/sessions';
 
 export default class GraphingScreen extends Component {
     constructor(props) {
@@ -22,12 +24,49 @@ export default class GraphingScreen extends Component {
         today.setHours(23, 59, 0, 0);
         const fortnightAgo = new Date(today - twoWeekstime);
         fortnightAgo.setHours(0,0,0,0);
+        const {navigation} = this.props;
+        const exercise = navigation.getParam('exercise', null);
         this.state = {
             fromDate: fortnightAgo,
             toDate: today,
             clickedDate: null,
             clickedDateName: '',
             isDateTimePickerVisible: false,
+            exercise: exercise,
+            sessions: []
+        }
+    }
+
+    componentDidMount = () => {
+        this.retrieveSessions(this.state.exercise);
+    }
+
+    saveSessions = async (title, sessions) => {
+        console.log("Saving sessions: ");
+        console.log(sessions)
+        try {
+            await AsyncStorage.setItem(title + sessionLocation, JSON.stringify(sessions));
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
+    retrieveSessions = async (exercise) => {
+        try {
+    
+            await AsyncStorage.getItem(exercise.title + sessionLocation)
+                .then((response) =>{
+                    let sessions = JSON.parse(response);
+                    if (sessions === null) {
+                        sessions = [];
+                    }
+                    this.setState({
+                        sessions:sessions,
+                        exercise:exercise
+                    })
+                });
+        } catch (error) {
+            console.warn(error);
         }
     }
 
@@ -51,15 +90,23 @@ export default class GraphingScreen extends Component {
     }
 
     openCreateSessionScreen = () => {
-        const {navigation} = this.props;
-        console.log(navigation.getParam('title', 'No exercise name'));
-        console.log(navigation.getParam('weightType', 'No weight type'));
-        console.log(navigation.getParam('goal', 'No goal '));
         this.props.navigation.navigate('CreateSession', {
-            weightType:navigation.getParam('weightType', ''),
-            exerciseTitle:navigation.getParam('title', ''),
-            goal:navigation.getParam('goal', ''),
+            weightType:this.state.exercise.weightType,
+            exerciseTitle:this.state.exercise.title,
+            goal:this.state.exercise.goal,
+            createSession:this.createSession.bind(this),
         });
+    }
+
+    createSession = (result, date) => {
+        const newSession = {
+            result: result,
+            date: date,
+        };
+        const sessionList = this.state.sessions;
+        sessionList.push(newSession);
+        this.saveSessions(this.state.exercise.title, sessionList)
+        this.setState({sessions:sessionList});
     }
 
     handleDatePicked = (date) => {
@@ -86,14 +133,15 @@ export default class GraphingScreen extends Component {
     hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
 
     render() {
-        const {navigation} = this.props;
-        const {params} = this.props.navigation.state;
+        if (this.state.exercise === null) {
+            return (false)
+        }
         const fromDateText = this.getTimeText(this.state.fromDate);
         const toDateText = this.getTimeText(this.state.toDate);
         return(
             <View style={styles.container}>
                 <Text style={styles.title}>
-                    {navigation.getParam('title', 'No exercise name')}
+                    {this.state.exercise.title}
                 </Text>
                 <View style={styles.dateButtonRow}>
                     <TouchableOpacity onPress={()=> this.showHideDatepicker('FromDate', this.state.fromDate)}>
