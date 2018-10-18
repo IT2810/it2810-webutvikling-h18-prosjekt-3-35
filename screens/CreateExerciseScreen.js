@@ -3,11 +3,8 @@ import {
     StyleSheet,
     View,
     TouchableWithoutFeedback,
-    Text,
-    TextInput,
     Keyboard,
     Picker,
-    Button,
     ScrollView,
 } from 'react-native';
 import {
@@ -43,11 +40,11 @@ export default class CreateExerciseScreen extends Component {
         const setsString = this.state.sets.toString();
         const goalString = this.state.goal.toString();
 
-        return titleString === '' || 
-            repsString === '' ||  
+        return titleString === '' ||
+            repsString === '' ||
             setsString === '' ||
-            goalString === '' ? true : false;
-    }
+            goalString === '';
+    };
 
     PickerWeightList = () => {
         const pickerList = [];
@@ -117,9 +114,9 @@ export default class CreateExerciseScreen extends Component {
         const repsView = this.createTextInputView('numeric', String(this.state.reps), 'Reps', 'reps');
         const goalView = this.createTextInputView('numeric', '', 'Weight Goal', 'goal');
         return (
-            <ScrollView>
+            <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
                 <TouchableWithoutFeedback 
-                    onPress={Keyboard.dismiss} accessible={false}
+                    accessible={false}
                     >
                     <View>
                         
