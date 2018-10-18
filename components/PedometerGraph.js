@@ -1,7 +1,4 @@
-import
-React, {
-    Component
-} from 'react';
+import React, {Component} from 'react';
 import {
     StyleSheet,
     View,
@@ -51,7 +48,7 @@ export class PedometerProgressGraph extends Component {
     }
 
     render() {
-        const goalResutText = this.goalText();
+        const goalResultText = this.goalText();
         return (
             <View>
                 <ProgressCircle
@@ -61,23 +58,23 @@ export class PedometerProgressGraph extends Component {
                     startAngle={ -Math.PI * 0.8 }
                     endAngle={ Math.PI * 0.8 }
                 />
-                {goalResutText}
-                <View style={styles.lineSeperator}/>
+                {goalResultText}
+                <View style={styles.lineSeparator}/>
             </View>
         );
     }
-
 }
 
 const styles = StyleSheet.create({
     graph: {
         height: 130,
+        marginTop: 24,
     },
     distance: {
         textAlign: 'center',
         fontSize: 24,
     },
-    lineSeperator: {
+    lineSeparator: {
         alignSelf: 'stretch',
         borderWidth: 0.2,
         borderColor: 'black',
