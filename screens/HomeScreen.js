@@ -154,7 +154,7 @@ export default class HomeScreen extends React.Component {
                             this.props.navigation.navigate('CreateExercise', {
                                 createExercise: this.createExercise.bind(this)
                             })}>
-                            <Button mode={'contained'} dark>Add exercise</Button>
+                            <Button mode={'contained'} dark={true}>Add exercise</Button>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.cardContainer}>
@@ -172,7 +172,7 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'lightgray',
+        backgroundColor: '#ecf8ff',
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     ScrollView: {
-        backgroundColor: 'lightgray',
         alignSelf: 'stretch',
     },
     cardContainer: {

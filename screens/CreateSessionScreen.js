@@ -54,11 +54,11 @@ export default class CreateSession extends Component {
         console.log("Goal: " + goal);
         console.log("Weight: " + weightType);
         return (
-            <ScrollView>
+            <ScrollView style={styles.container}>
                 <TouchableWithoutFeedback
                     onPress={Keyboard.dismiss} accessible={false}
                     >
-                    <View style={styles.container}>
+                    <View>
                         <View>
                             <Text>How close were you to your goal of</Text>
                             <Text>{goal}{weightType}</Text>
@@ -84,7 +84,7 @@ export default class CreateSession extends Component {
 
 const styles = StyleSheet.create({
     container: {
-
+        backgroundColor: '#ecf8ff',
     },
     dateButton: {
         borderRadius: 1,

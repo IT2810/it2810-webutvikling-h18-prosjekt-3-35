@@ -54,7 +54,7 @@ export class PedometerProgressGraph extends Component {
                 <ProgressCircle
                     style={styles.graph}
                     progress={ this.state.progress }
-                    progressColor={'rgb(134, 65, 244)'}
+                    progressColor={'#5c92aa'}
                     startAngle={ -Math.PI * 0.8 }
                     endAngle={ Math.PI * 0.8 }
                 />
@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         borderWidth: 0.2,
         borderColor: 'black',
-        backgroundColor: 'lightgray',
         marginTop: 5,
         marginBottom: 10,
     },
