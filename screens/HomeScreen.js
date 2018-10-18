@@ -29,6 +29,7 @@ export default class HomeScreen extends React.Component {
             stepsWalked: 1000,
             stepGoal: 10000,
             exercises: [],
+            exerciseNames: []
         }
     }
 
@@ -55,15 +56,22 @@ export default class HomeScreen extends React.Component {
                 .then((response) =>{
                     let dailyGoal = JSON.parse(response[0][1]);
                     let exerciseList = JSON.parse(response[1][1]);
+                    const exerciseNames = [];
+              
                     if (dailyGoal === null) {
-                        dailyGoal = 100000;
+                        dailyGoal = 10000;
                     }
                     if (exerciseList === null) {
                         exerciseList = [];
                     }
+                    for (const num in exerciseList) {
+                        const name = exerciseList[num].title;
+                        exerciseNames.push(name);
+                    }
                     this.setState({
                         stepGoal:dailyGoal,
                         exercises:exerciseList,
+                        exerciseNames:exerciseNames,
                     })
                 });
         } catch (error) {
@@ -99,21 +107,14 @@ export default class HomeScreen extends React.Component {
     };
 
     openExerciseScreen = (exercise) => {
-        console.log(exercise.goal);
         this.props.navigation.navigate('ExerciseGraph', {
-            title: exercise.title,
-            weightType: exercise.weightType,
-            personalNotes: exercise.personalNotes,
-            reps: exercise.reps,
-            sets: exercise.sets,
-            goal: exercise.goal,
+            exercise:exercise,
         });
     };
 
     createExerciseCards = () => {
         const exerciseLists = this.state.exercises;
         const exerciseCards = [];
-        //console.log(exerciseLists);
         for (const num in exerciseLists) {
             exerciseCards.push(
                 <TouchableOpacity 
@@ -152,7 +153,8 @@ export default class HomeScreen extends React.Component {
                         style={styles.addExerciseView}
                         onPress={() =>
                             this.props.navigation.navigate('CreateExercise', {
-                                createExercise: this.createExercise.bind(this)
+                                createExercise: this.createExercise.bind(this),
+                                exerciseNames: this.state.exerciseNames,
                             })}>
                             <Button mode={'contained'} dark>Add exercise</Button>
                         </TouchableOpacity>
