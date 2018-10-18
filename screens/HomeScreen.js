@@ -1,6 +1,4 @@
-import React, 
-    { Component
-} from 'react';
+import React, { Component } from 'react';
 import {
     ScrollView,
     Image,
@@ -10,8 +8,12 @@ import {
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
+import {
+    Button,
+} from 'react-native-paper';
 import { PedometerProgressGraph } from '../components/PedometerGraph';
 import { ExerciseCard } from '../components/ExerciseCard';
+import {ExerciseCards} from "../components/ExerciseCards";
 import { PedometerSensor } from '../components/PedometerSensor';
 
 const logoSource = '../assets/images/pmm.png';
@@ -19,26 +21,24 @@ const addExerciseButton = '../assets/images/plus.png';
 const dailyGoalLocation = 'dailyGoal';
 const exerciseListsLocation = 'exerciseCards';
 
-export default class HomeScreen extends Component {
+export default class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            pedometerModalVisible: false,
             stepsWalked: 1000,
             stepGoal: 10000,
             exercises: [],
             exerciseNames: []
         }
     }
+
     static navigationOptions = {
         header: null,
     };
 
     // The mount function launches retrieval for the daily goal as well as the exercises created.
     componentDidMount = () => this.retrieveData();
-
-    componentDidUpdate = () => {
-
-    }
 
     //ExerciseNames is used to check if names are unique when creating a new exercise
     updateUniqueNames = (exerciseList) => {
@@ -57,7 +57,7 @@ export default class HomeScreen extends Component {
         } catch (error) {
             console.warn(error);
         }
-    }
+    };
 
     //Uses a list of locations to retrieve the data. 
     retrieveData = async () => {
@@ -79,7 +79,7 @@ export default class HomeScreen extends Component {
         } catch (error) {
             console.warn(error);
         }
-    }
+    };
 
     //This function is sent down to PedometerSensor that updates the steps 
     updateSteps = (steps) => this.setState({stepsWalked:parseInt(steps,10)})
@@ -92,7 +92,7 @@ export default class HomeScreen extends Component {
             stepGoal: parseInt(goal, 10),
         });
         this.saveData(dailyGoalLocation, goal);
-    }
+    };
     
     //This function is sent down to CreateExerciseScreen and creates an exercise
     //based on data retrieved, as well as saving it 
@@ -104,7 +104,7 @@ export default class HomeScreen extends Component {
             reps: reps,
             sets: sets,
             goal: goal,
-        }
+        };
         const exerciseLists = this.state.exercises;
         exerciseLists.push(newExercise);
         const exerciseNames = this.updateUniqueNames(exerciseLists);
@@ -120,7 +120,7 @@ export default class HomeScreen extends Component {
         this.props.navigation.navigate('ExerciseGraph', {
             exercise:exercise,
         });
-    }
+    };
 
     //Opens the StepGoalScreen and sends down props and a function
     openStepGoalScreen = () => {
@@ -142,7 +142,7 @@ export default class HomeScreen extends Component {
     //Creates the ExerciseCards that are rendered
     createExerciseCards = () => {
         const exerciseLists = this.state.exercises;
-        const exerciseCards = []
+        const exerciseCards = [];
         for (const num in exerciseLists) {
             exerciseCards.push(
                 <TouchableOpacity 
@@ -154,15 +154,12 @@ export default class HomeScreen extends Component {
                 </TouchableOpacity>);
         }
         return exerciseCards;
-    }
+    };
 
     render() {
         const exerciseCards = this.createExerciseCards();
         return (
             <View style = {styles.container}>
-                <Image 
-                    source = {require(logoSource)}
-                    style = {styles.logo}/>
                 <View style = {styles.lineStyle}/>
                 <ScrollView style = {styles.ScrollView} >
                     <TouchableOpacity onPress={() => this.openStepGoalScreen()}>
@@ -191,8 +188,8 @@ export default class HomeScreen extends Component {
                     />
                 */}
             </View>);
-        }
     }
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -200,20 +197,24 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
+        paddingTop: 10,
         paddingHorizontal: 20,
     },
     logo: {
+        position: 'absolute',
+        zIndex:1000,
+        top: 20,
+        left: 105,
         marginTop: 18,
         marginBottom: 5,
         height: 100,
-        width: 100
+        width: 105
     },
     addExerciseView:  {
         flexDirection: 'row',
         alignItems: 'center',
         alignSelf: 'flex-end',
-        backgroundColor: '#fff',
-        padding: 5,
+        paddingRight: 8,
     },
     addExerciseSymbol : {
         height: 25,
@@ -223,14 +224,6 @@ const styles = StyleSheet.create({
     ScrollView: {
         backgroundColor: 'lightgray',
         alignSelf: 'stretch',
-    },
-    lineStyle: {
-        alignSelf: 'stretch',
-        borderWidth: 3,
-        borderColor: 'black',
-        borderBottomColor: 'lightgray',
-        backgroundColor: 'lightgray',
-        marginBottom: 10,
     },
     cardContainer: {
         flexDirection: 'column',
