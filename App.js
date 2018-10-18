@@ -1,14 +1,35 @@
 import React, { Component } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
+import { createStackNavigator } from 'react-navigation';
+import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
-import AppNavigator from './navigation/AppNavigator';
 import HomeScreen from './screens/HomeScreen';
 import StepGoalScreen from './screens/StepGoalScreen';
 import CreateExerciseScreen from './screens/CreateExerciseScreen';
 import GraphingScreen from './screens/GraphingScreen';
 import CreateSessionScreen from './screens/CreateSessionScreen';
-import { createStackNavigator } from 'react-navigation';
+
+const theme = {
+    ...DefaultTheme,
+    dark: true,
+    roundness: 2,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: '#5c92aa',
+        accent: '#5c92aa',
+        background: '#ecf8ff',
+        surface: '#30375e',
+        text: '#041234',
+        disabled: '#8dc2dc',
+        placeholder: '#5c618b',
+        backdrop: '#ffffff',
+    },
+    fonts: {
+        ...DefaultTheme.fonts,
+
+    }
+};
 
 export default class App extends Component {
   constructor(props) {
@@ -54,7 +75,9 @@ export default class App extends Component {
         />);
     } else {
       return(
-        <RootStack />
+          <PaperProvider theme={theme}>
+              <RootStack />
+          </PaperProvider>
       );
     }
   }
@@ -69,11 +92,4 @@ const RootStack = createStackNavigator({
   },
   {
     initialRouteName: 'Home',
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
 });
