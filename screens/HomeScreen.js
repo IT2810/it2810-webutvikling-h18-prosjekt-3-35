@@ -162,6 +162,9 @@ export default class HomeScreen extends React.Component {
                 <View style = {styles.lineStyle}/>
                 <ScrollView style = {styles.ScrollView} >
                     <TouchableOpacity onPress={() => this.openStepGoalScreen()}>
+                        <Image
+                            source = {require(logoSource)}
+                            style = {styles.logo}/>
                         <PedometerProgressGraph 
                             stepsWalked={this.state.stepsWalked} 
                             goal={this.state.stepGoal} />
