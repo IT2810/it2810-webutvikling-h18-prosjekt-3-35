@@ -146,7 +146,7 @@ export default class GraphingScreen extends Component {
                     <Button
                         dark={true}
                         mode={'contained'}
-                        style={{marginTop: 4}}
+                        style={{marginTop: 4, marginBottom: 20,}}
                         onPress={() => this.openCreateSessionScreen()}
                     >
                         Add new Session
