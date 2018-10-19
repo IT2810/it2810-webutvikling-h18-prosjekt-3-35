@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import SessionLineGraph from '../components/SessionLineGraph';
 import SessionCircleGraph from '../components/SessionCircleGraph';
+import PersonalNotes from '../components/PersonalNotes';
 const sessionLocation = '/sessions';
 
 export default class GraphingScreen extends Component {
@@ -129,7 +130,8 @@ export default class GraphingScreen extends Component {
                     <Text>Your goal is {exercise.goal}{exercise.weight}</Text>
                     {sessionLineGraph}
                     {sessionCircleGraph}
-                    <Button
+                    <PersonalNotes personalNotes={exercise.personalNotes} />
+                    <Button 
                         title={'Add new Session'}
                         onPress={() => this.openCreateSessionScreen()}/>
                 </View>
