@@ -72,6 +72,7 @@ Styling is done in each javascript file. We decided to do this instead of having
 
 #### Use of libraries
 We decided to keep the libraries to just what we needed to do what we wanted to do, but not do everything for us. 
+
 - The DateTimePicker is used because it simplifies the selection of dates. It is implemented in basic React Native, but have to use the Platform to check system and use the correct implementation for each system. 
 ```
 import {Platform, StyleSheet} from 'react-native';
@@ -79,8 +80,24 @@ import {Platform, StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   height: Platform.OS === 'ios' ? 200 : 100,
 });
-``` 
+```
+
+The DateTimePicker component itself is used in the render function as follows
+```
+import DateTimePicker from 'react-native-modal-datetime-picker';
+
+//---------------------------------------------------------------------------
+
+<DateTimePicker
+                            date = {today}
+                            isVisible = {this.state.isDateTimePickerVisible}
+                            onConfirm = {this.handleDatePicked}
+                            onCancel = {this.hideDateTimePicker}/>
+```                            
+Reason for passing {this.state.isDateTimePickerVisible, to isVisible, instead of just true is because the picker is always there}
+
 - The React Native SVG Charts uses React Native SVG and is the pedometer progress graph.
+- The React Native Chart Kit is the graphs in each exercise. 
 
     One needs to implement the third-party charts
 ```  
@@ -113,7 +130,6 @@ return(
             chartConfig={chartConfig}/>
         );
 ```
-- The React Native Chart Kit is the graphs in each exercise. 
 - Moment was barely used (Only in PedometerSensor.js), which was regretfully discovered late. Moment is used to easily make date objects, which can be troublesome in JavaScript.
 ```
  import moment from 'moment';
