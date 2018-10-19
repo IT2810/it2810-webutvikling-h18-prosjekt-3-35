@@ -14,9 +14,9 @@ import {
 import { PedometerProgressGraph } from '../components/PedometerGraph';
 import { ExerciseCard } from '../components/ExerciseCard';
 import { PedometerSensor } from '../components/PedometerSensor';
+import { saveData } from '../constants/AsyncStorage';
 
 const logoSource = '../assets/images/pmm.png';
-const addExerciseButton = '../assets/images/plus.png';
 const dailyGoalLocation = 'dailyGoal';
 const exerciseListsLocation = 'exerciseCards';
 
@@ -48,15 +48,6 @@ export default class HomeScreen extends React.Component {
         }
         return exerciseNames;
     }
-
-    //Takes in a location for the data, as well as the data saved
-    saveData = async (location, data) => {
-        try {
-            await AsyncStorage.setItem(location, JSON.stringify(data));
-        } catch (error) {
-            console.warn(error);
-        }
-    };
 
     //Uses a list of locations to retrieve the data. 
     retrieveData = async () => {
@@ -90,11 +81,10 @@ export default class HomeScreen extends React.Component {
             pedometerModalVisible: !this.state.pedometerModalVisible,
             stepGoal: parseInt(goal, 10),
         });
-        this.saveData(dailyGoalLocation, goal);
+        saveData(dailyGoalLocation, goal);
     };
     
     //This function is sent down to CreateExerciseScreen and creates an exercise
-    //based on data retrieved, as well as saving it 
     createExercise = (title, weightType, personalNotes, reps, sets, goal) => {
         const newExercise = {
             title: title,
@@ -104,22 +94,20 @@ export default class HomeScreen extends React.Component {
             sets: sets,
             goal: goal,
         };
+        this.pushExerciseInList(newExercise)
+    }
+
+    pushExerciseInList(newExercise) {
         const exerciseLists = this.state.exercises;
         exerciseLists.push(newExercise);
         const exerciseNames = this.updateUniqueNames(exerciseLists);
-        this.saveData(exerciseListsLocation, exerciseLists);
+        saveData(exerciseListsLocation, exerciseLists);
         this.setState({
             exercises:exerciseLists,
             exerciseNames:exerciseNames,
         });
     }
-
-    //Opens the exercise screen and sends down a prop
-    openExerciseGraphScreen = (exercise) => {
-        this.props.navigation.navigate('ExerciseGraph', {
-            exercise:exercise,
-        });
-    };
+    
 
     //Opens the StepGoalScreen and sends down props and a function
     openStepGoalScreen = () => {
@@ -145,28 +133,26 @@ export default class HomeScreen extends React.Component {
         const exerciseCards = [];
         for (const num in exerciseLists) {
             exerciseCards.push(
-                <TouchableOpacity 
-                    key={num}
-                    onPress={() => this.openExerciseGraphScreen(exerciseLists[num])}
-                    onLongPress={()=> this.alertDelete(exerciseLists, num, exerciseLists[num].title)} >
-                    <ExerciseCard 
-                        title={exerciseLists[num].title}
-                        />
-                </TouchableOpacity>);
+                <ExerciseCard
+                    alertDelete={this.alertDelete.bind(this)}
+                    key={num} 
+                    index={num}
+                    navigation={this.props.navigation}
+                    exercise={exerciseLists[num]}/>
+                );
         }
         return exerciseCards;
     };
     
     //Alert for deleting the specific exercise
-    alertDelete = (list, index, title) => {
-        console.log(list);
+    alertDelete = (index, title) => {
         Alert.alert(
             'Delete exercise?',
             'Do you want to delete ' + title + "?" ,
             [
               {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
               {text: 'OK', onPress: () => {
-                  this.deleteExercise(list, index, title);
+                  this.deleteExercise(index, title);
                 }},
             ],
             { cancelable: false }
@@ -174,10 +160,11 @@ export default class HomeScreen extends React.Component {
     }
 
     //Deletes the exercise and sessions from local storage
-    deleteExercise = (list, index, title) => {
+    deleteExercise = (index, title) => {
+        const list = this.state.exercises;
         list.splice(index,1);
-        this.saveData(exerciseListsLocation, list);
-        this.saveData(title+'/sessions', [])
+        saveData(exerciseListsLocation, list);
+        saveData(title+'/sessions', []);
         const uniqueNames = this.updateUniqueNames(list);
         this.setState({
             exercises:list,
