@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Alert,
+    Dimensions,
 } from 'react-native';
 import {
     Button,
@@ -206,6 +207,7 @@ export default class HomeScreen extends React.Component {
     }
 }
 
+const w = Dimensions.get('window').width;
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#ecf8ff',
@@ -215,11 +217,15 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingHorizontal: 20,
     },
+    TouchableOpacity: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     logo: {
         position: 'absolute',
         zIndex:1000,
         top: 20,
-        left: 105,
+        left: w/2-75,
         marginTop: 18,
         marginBottom: 5,
         height: 100,

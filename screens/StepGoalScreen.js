@@ -1,16 +1,15 @@
-import 
-    React, {
-    Component,
-} from 'react';
+import React, { Component } from 'react';
 import {
     StyleSheet,
     View,
-    Text,
-    TextInput,
-    Button,
     Keyboard,
     TouchableWithoutFeedback,
 } from 'react-native';
+import {
+    Button,
+    Text,
+    TextInput,
+} from 'react-native-paper';
 
 const backButtonText = "Back";
 const acceptButtonText = "OK";
