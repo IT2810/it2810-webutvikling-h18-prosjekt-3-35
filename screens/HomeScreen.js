@@ -4,7 +4,6 @@ import {
     Image,
     StyleSheet,
     View,
-    Text,
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
@@ -163,6 +162,9 @@ export default class HomeScreen extends React.Component {
                 <View style = {styles.lineStyle}/>
                 <ScrollView style = {styles.ScrollView} >
                     <TouchableOpacity onPress={() => this.openStepGoalScreen()}>
+                        <Image
+                            source = {require(logoSource)}
+                            style = {styles.logo}/>
                         <PedometerProgressGraph 
                             stepsWalked={this.state.stepsWalked} 
                             goal={this.state.stepGoal} />
@@ -171,11 +173,7 @@ export default class HomeScreen extends React.Component {
                         <TouchableOpacity
                             style={styles.addExerciseView}
                             onPress={() => this.openCreateExerciseScreen()} >
-                            <Text>Add exercise</Text>
-                            <Image
-                                //Icon made by wwww.flaticon.com/authors/freepik
-                                source= {require(addExerciseButton)}
-                                style= {styles.addExerciseSymbol} />
+                            <Button mode={'contained'} dark={true}>Add exercise</Button>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.cardContainer}>
@@ -193,7 +191,7 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'lightgray',
+        backgroundColor: '#ecf8ff',
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
@@ -222,7 +220,6 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     ScrollView: {
-        backgroundColor: 'lightgray',
         alignSelf: 'stretch',
     },
     cardContainer: {

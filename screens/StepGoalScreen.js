@@ -83,9 +83,10 @@ export default class PedometerGoal extends Component {
 
 const styles = StyleSheet.create({
     modalContainer: {
+        backgroundColor: '#ecf8ff',
         flexDirection: 'column',
         flex: 1,
-        margin: 20,
+        paddingHorizontal: 20,
     },
     inputField: {
         padding: 5,

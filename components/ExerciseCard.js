@@ -12,7 +12,7 @@ import {
 export class ExerciseCard extends Component {
     render() {
         return(
-            <Card style={styles.card}>
+            <Card style={styles.card} theme={{ colors:{text: '#ecf8ff'}}}>
                 <Card.Content>
                     <Title>{this.props.title}</Title>
                 </Card.Content>
