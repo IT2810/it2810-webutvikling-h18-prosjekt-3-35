@@ -82,7 +82,7 @@ export default class CreateExerciseScreen extends Component {
     //Creates a picker based on the picker items that lets the user select a weight type
     createWeightRadioButtons = () => {
         return (
-            <View>
+            <View style={styles.radiobuttons}>
                 <Text>Weight:</Text>
                 <View style={styles.radiobuttons}>
                     {this.createRadioButton('kg', 'KG')}

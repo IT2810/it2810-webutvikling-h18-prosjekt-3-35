@@ -1,7 +1,4 @@
-import
-React, {
-    Component
-} from 'react';
+import React, {Component} from 'react';
 import {
     StyleSheet,
     View,
@@ -19,26 +16,24 @@ export class PedometerProgressGraph extends Component {
         }
     }
 
+    //Updates the graph on mount
     componentDidMount = () => this.calculateProgress(this.props.stepsWalked, this.props.goal);
 
+    //Updates the graph when the goal or steps walked has changed
     componentDidUpdate = (prevProps) => {
         if (prevProps.goal !== this.props.goal || prevProps.stepsWalked !== this.props.stepsWalked) {
             this.calculateProgress(this.props.stepsWalked, this.props.goal);
         }
     }
 
-    calculateProgress = (stepsWalked, goal) => this.setState({
-        progress: (stepsWalked / goal)
-    });
+    //Calculates the progress used for the graph
+    calculateProgress = (stepsWalked, goal) => this.setState({progress: (stepsWalked / goal)});
 
+    //If the steps has reached or exceeded the goal it returns a positive text
     goalText = () => {
-        let returnText;
-        if (this.state.progress === 1 || this.state.progress > 1) {
-            returnText = <Text style={styles.resultText}>Du har nådd målet!</Text>
-        } else {
-            returnText = <View></View>
-        }
-
+        const returnText = (this.state.progress >= 1) ? 
+            <Text style={styles.resultText}>Du har nådd målet!</Text> :
+            <View></View>;
         return (
             <View>
                 <Text
@@ -51,37 +46,36 @@ export class PedometerProgressGraph extends Component {
     }
 
     render() {
-        const goalResutText = this.goalText();
+        const goalResultText = this.goalText();
         return (
             <View>
                 <ProgressCircle
                     style={styles.graph}
                     progress={ this.state.progress }
-                    progressColor={'rgb(134, 65, 244)'}
+                    progressColor={'#5c92aa'}
                     startAngle={ -Math.PI * 0.8 }
                     endAngle={ Math.PI * 0.8 }
                 />
-                {goalResutText}
-                <View style={styles.lineSeperator}/>
+                {goalResultText}
+                <View style={styles.lineSeparator}/>
             </View>
         );
     }
-
 }
 
 const styles = StyleSheet.create({
     graph: {
         height: 130,
+        marginTop: 24,
     },
     distance: {
         textAlign: 'center',
         fontSize: 24,
     },
-    lineSeperator: {
+    lineSeparator: {
         alignSelf: 'stretch',
         borderWidth: 0.2,
         borderColor: 'black',
-        backgroundColor: 'lightgray',
         marginTop: 5,
         marginBottom: 10,
     },
