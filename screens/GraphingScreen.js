@@ -127,8 +127,9 @@ export default class GraphingScreen extends Component {
             <ScrollView>
                 <View style={styles.container}>
                     <Text style={styles.title}>{exercise.title}</Text>
-                    <Text>Your goal is {exercise.goal}{exercise.weight}</Text>
+                    <Text>Your goal is {exercise.goal}{exercise.weight}, results:</Text>
                     {sessionLineGraph}
+                    <Text>3 newest results compared to goal:</Text>
                     {sessionCircleGraph}
                     <PersonalNotes personalNotes={exercise.personalNotes} />
                     <Button 

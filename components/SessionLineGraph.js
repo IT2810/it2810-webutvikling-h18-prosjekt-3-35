@@ -27,6 +27,7 @@ export default class SessionLineGraph extends Component {
         super(props);
         this.state = {
             sessionDatesX: [],
+            sessionDatesXU: [],
             sessionResultsY: [],
         }
     }
@@ -42,14 +43,17 @@ export default class SessionLineGraph extends Component {
     iterateSessions = () => {
         const sessions = this.props.sessions;
         const sessionDates = [];
+        const sessionDatesU = [];
         const sessionResults = [];
         for (const num in sessions) {
             const session = sessions[num];
             sessionDates.push(this.getTimeText(session.date));
+            sessionDatesU.push(this.getTimeTextU(session.date));
             sessionResults.push(Number(session.result));
         }
         this.setState({
             sessionDatesX:sessionDates,
+            sessionDatesXU:sessionDatesU,
             sessionResultsY:sessionResults,
         })
     }
@@ -60,15 +64,28 @@ export default class SessionLineGraph extends Component {
         const month = months[date.getMonth()];
         return weekday + ' ' + date.getDate() + ' ' + month;
     }
+    getTimeTextU = (date) => {
+        date = new Date(date);
+        return date.getDate();
+    }
 
     render() {
-        const { sessionDatesX, sessionResultsY } = this.state;
+        const {sessionDatesX, sessionResultsY, sessionDatesXU} = this.state;
         if (sessionDatesX.length === 0) {
-            return(false);
+            return (false);
         }
-        const lineData = {
+        let lineData;
+        if (sessionDatesX.length <= 4) {
+            lineData = {
             labels: sessionDatesX,
-            datasets: [{data: sessionResultsY}, ]
+            datasets: [{data: sessionResultsY},]
+            }
+        }
+        else{
+                lineData = {
+                labels: sessionDatesXU,
+                datasets: [{data: sessionResultsY},]
+            }
         }
 
         return (
