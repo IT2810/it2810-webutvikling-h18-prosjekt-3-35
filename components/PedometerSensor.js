@@ -1,8 +1,8 @@
 import React, {
     Component
 } from 'react';
-import { Text, View } from 'react-native';
 import { Pedometer, Expo } from 'expo';
+import moment from 'moment';
 
 export class PedometerSensor extends Component {
     constructor(props) {
@@ -33,14 +33,14 @@ export class PedometerSensor extends Component {
             this.props.updateSteps(this.state.pastStepCount + this.state.currentStepCount);
         });
 
-        const end = new Date();
-        const start = new Date();
-        start.setHours(0,0,0,0);//Last midnight
-        end.setHours(24,0,0,0);//This midnight
+
+        const start = moment().subtract(1, 'days').endOf('day').toDate();
+        const end = moment().endOf('day').toDate();
 
         //Gets the step count between two dates
         Pedometer.getStepCountAsync(start, end).then(
             result => {
+                console.log(result);
                 this.setState({ pastStepCount: result.steps});
                 this.props.updateSteps(this.state.pastStepCount);
             },
