@@ -85,7 +85,7 @@ export default class CreateExerciseScreen extends Component {
             <View>
                 <Text>Weight:</Text>
                 <View style={styles.radiobuttons}>
-                    {this.createRadioButton('kg', 'KG')}
+                    {this.createRadioButton('kg', 'Kg')}
                     {this.createRadioButton('lbs', 'Lbs')}
                     {this.createRadioButton('none', 'No Weight')}
                 </View>
@@ -96,8 +96,8 @@ export default class CreateExerciseScreen extends Component {
     createRadioButton = (weight, text) => {
         const {weightType} = this.state;
         return (
-            <View>
-                <Text style={styles.radioLabel}>{text}</Text>
+            <View style={styles.radio}>
+                <Text>{text}</Text>
                 <RadioButton
                     value={weight}
                     status={weightType === weight ? 'checked' : 'unchecked'}
@@ -116,7 +116,7 @@ export default class CreateExerciseScreen extends Component {
         const {params} = this.props.navigation.state;
         const {title, weightType, personalNotes, reps, sets, goal } = this.state;
         console.log(uniqueNames);
-        console.log(uniqueNames.includes(title))
+        console.log(uniqueNames.includes(title));
         if (uniqueNames.includes(title)) {
             this.alertNameMessage();
         } else {
@@ -145,12 +145,13 @@ export default class CreateExerciseScreen extends Component {
     render() {
         const {sets, reps} = this.state;
         const disabledButton = this.isButtonDisabled();
+        const buttonColor = disabledButton ? '#8dc2dc' : '#5c92aa';
         const weightTypePicker = this.createWeightRadioButtons();
         const personalNotesView = this.createTextInputView('default', '', 'Personal Notes', 'personalNotes');
         const exerciseView = this.createTextInputView('default', '', 'Exercise Name', 'title');
         const setsView = this.createTextInputView('numeric', String(sets), 'Sets', 'sets');
         const repsView = this.createTextInputView('numeric', String(reps), 'Reps', 'reps');
-        const goalView = this.createTextInputView('numeric', '', 'Weight Goal', 'goal')
+        const goalView = this.createTextInputView('numeric', '', 'Weight Goal', 'goal');
         return (
             <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
                 <TouchableWithoutFeedback 
@@ -166,10 +167,10 @@ export default class CreateExerciseScreen extends Component {
                         {goalView}
 
                         <Button
+                            dark={true}
                             mode={'contained'}
                             disabled={disabledButton}
-                            style={styles.button}
-                            title={acceptButtonText}
+                            style={{marginTop: 4, backgroundColor: buttonColor}}
                             onPress={() => this.buttonPressed()}
                         >
                             {acceptButtonText}
@@ -188,13 +189,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         backgroundColor: '#ecf8ff',
     },
-    button:{
-        marginTop: 4,
-    },
     radiobuttons:{
         flexDirection: 'row',
+        justifyContent: 'space-around',
     },
-    radioLabel:{
+    radio:{
         alignSelf: 'center',
+        justifyContent: 'center',
     },
 });
