@@ -6,6 +6,7 @@ import {
     View,
     TouchableOpacity,
     AsyncStorage,
+    Alert,
 } from 'react-native';
 import {
     Button,
@@ -137,6 +138,7 @@ export default class HomeScreen extends React.Component {
         })
     }
 
+    
     //Creates the ExerciseCards that are rendered
     createExerciseCards = () => {
         const exerciseLists = this.state.exercises;
@@ -145,14 +147,43 @@ export default class HomeScreen extends React.Component {
             exerciseCards.push(
                 <TouchableOpacity 
                     key={num}
-                    onPress={() => this.openExerciseGraphScreen(exerciseLists[num])} >
+                    onPress={() => this.openExerciseGraphScreen(exerciseLists[num])}
+                    onLongPress={()=> this.alertDelete(exerciseLists, num, exerciseLists[num].title)} >
                     <ExerciseCard 
                         title={exerciseLists[num].title}
-                    />
+                        />
                 </TouchableOpacity>);
         }
         return exerciseCards;
     };
+    
+    //Alert for deleting the specific exercise
+    alertDelete = (list, index, title) => {
+        console.log(list);
+        Alert.alert(
+            'Delete exercise?',
+            'Do you want to delete ' + title + "?" ,
+            [
+              {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+              {text: 'OK', onPress: () => {
+                  this.deleteExercise(list, index, title);
+                }},
+            ],
+            { cancelable: false }
+          )
+    }
+
+    //Deletes the exercise and sessions from local storage
+    deleteExercise = (list, index, title) => {
+        list.splice(index,1);
+        this.saveData(exerciseListsLocation, list);
+        this.saveData(title+'/sessions', [])
+        const uniqueNames = this.updateUniqueNames(list);
+        this.setState({
+            exercises:list,
+            exerciseNames:uniqueNames
+        });
+    }
 
     render() {
         const exerciseCards = this.createExerciseCards();
