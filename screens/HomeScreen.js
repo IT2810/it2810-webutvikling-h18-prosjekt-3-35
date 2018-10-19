@@ -49,7 +49,8 @@ export default class HomeScreen extends React.Component {
         return exerciseNames;
     }
 
-    //Uses a list of locations to retrieve the data. 
+    //Uses a list of locations to retrieve the data, create a list unique names so they won't be reused
+    //as well as setting the state.
     retrieveData = async () => {
         const locations = [dailyGoalLocation, exerciseListsLocation];
         try {
@@ -97,6 +98,7 @@ export default class HomeScreen extends React.Component {
         this.pushExerciseInList(newExercise)
     }
 
+    //Pushes the newly created exercise in the list, saving it and setting the state
     pushExerciseInList(newExercise) {
         const exerciseLists = this.state.exercises;
         exerciseLists.push(newExercise);
@@ -176,8 +178,10 @@ export default class HomeScreen extends React.Component {
         const exerciseCards = this.createExerciseCards();
         return (
             <View style = {styles.container}>
-                <View style = {styles.lineStyle}/>
+                <View style = {styles.lineStyle} />
+
                 <ScrollView style = {styles.ScrollView} >
+                
                     <TouchableOpacity onPress={() => this.openStepGoalScreen()}>
                         <Image
                             source = {require(logoSource)}
@@ -186,6 +190,7 @@ export default class HomeScreen extends React.Component {
                             stepsWalked={this.state.stepsWalked}
                             goal={this.state.stepGoal} />
                     </TouchableOpacity>
+
                     <View>
                         <TouchableOpacity
                             style={styles.addExerciseView}
@@ -193,16 +198,19 @@ export default class HomeScreen extends React.Component {
                             <Button mode={'contained'} dark={true}>Add exercise</Button>
                         </TouchableOpacity>
                     </View>
+
                     <View style={styles.cardContainer}>
                         {exerciseCards}
                     </View>
+
                 </ScrollView>
                 {/*
                     <PedometerSensor
                         updateSteps={this.updateSteps.bind(this)}
                     />
                 */}
-            </View>);
+            </View>
+        );
     }
 }
 

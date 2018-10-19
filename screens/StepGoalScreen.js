@@ -50,10 +50,12 @@ export default class PedometerGoal extends Component {
             <View style={styles.modalContainer}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                     <View style={styles.modalContainer}>
+
                         <View style={styles.stateText}>
                             <Text style={styles.text}>You have walked {currentSteps} steps</Text>
                             <Text style={styles.text}>Your daily goal is {stepGoal} steps</Text>
                         </View>
+
                         <View style={styles.textInputRow}>
                             <Text>Edit goal steps:</Text>  
                             <TextInput
@@ -65,6 +67,7 @@ export default class PedometerGoal extends Component {
                                     this.updateDisabledbutton(number)
                                 }}/>                            
                         </View>
+
                         <View style={styles.buttonRow}>
                             <Button 
                                 disabled={this.state.disabledButton}
@@ -74,6 +77,7 @@ export default class PedometerGoal extends Component {
                                     navigation.goBack();
                                 }}/>
                         </View>
+
                     </View>
                 </TouchableWithoutFeedback>
             </View>
