@@ -195,3 +195,4 @@ All the cards from Projects have been used to create issues, the issues will be 
 - https://github.com/callstack/react-native-paper
 - https://www.npmjs.com/package/react-native-chart-kit
 - https://www.npmjs.com/package/moment
+- https://www.npmjs.com/package/jest
