@@ -81,8 +81,48 @@ const styles = StyleSheet.create({
 });
 ``` 
 - The React Native SVG Charts uses React Native SVG and is the pedometer progress graph.
+
+    One needs to implement the third-party charts
+```  
+    import {
+    ProgressChart,
+} from 'react-native-chart-kit';
+
+```
+before one configures the visuals
+
+```
+const chartConfig={
+    backgroundColor: '#e26a00',
+    backgroundGradientFrom: '#fb8c00',
+    backgroundGradientTo: '#ffa726',
+    decimalPlaces: 2, // optional, defaults to 2dp
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    style: {
+        borderRadius: 16
+    }
+} 
+```
+And finally returns the component inside of the render function
+```
+return(
+        <ProgressChart
+            data={graphResults}
+            width={screenWidth}
+            height={220}
+            chartConfig={chartConfig}/>
+        );
+```
 - The React Native Chart Kit is the graphs in each exercise. 
-- Moment was barely used (Only in PedometerSensor.js), which was regretfully discovered late. Moment is used to easily make date ibjects.
+- Moment was barely used (Only in PedometerSensor.js), which was regretfully discovered late. Moment is used to easily make date objects, which can be troublesome in JavaScript.
+```
+ import moment from 'moment';
+ 
+ //-----------------------------------------------------------------
+
+ const start = moment().subtract(1, 'days').endOf('day').toDate();
+        const end = moment().endOf('day').toDate();
+```
 
 ### Design
 We are basing a lot of the design on Google's material design and using the third party library React Native Paper which allows for easy implementation of the material design guidelines as well as edit it in our own way. Paper also gives the application the feeling of it being the same across iOS and Android which is not in basic React Native.
