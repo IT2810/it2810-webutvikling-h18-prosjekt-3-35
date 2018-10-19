@@ -27,9 +27,58 @@ PMM is an iOS and Android application that motivates the user to create exercise
     - Let the user click on the nodes on the graph to see more about the results
     - Let the user save more data about sessions
     - Let the user edit the exercise
+    
+### Reasoning Behind Structure and Decision Making
+#### Navigation
+Navigation is solved using createStackNavigator() in App.js. We used a simple stack navigation since this application works as a single screen application not needing an advanced type of navigation. Sending props and going to the screen 'CreateExercise' is done using the function below. 
+```
+//Opens the CreateExereciseScreen 
+    openCreateExerciseScreen = () => {
+        this.props.navigation.navigate('CreateExercise', {
+            createExercise: this.createExercise.bind(this),
+            exerciseNames: this.state.exerciseNames,
+        })
+    }
+```
+Retrieving the prop exerciseNames in CreateExerciseScreen is done by calling ```const uniqueNames = this.props.navigation.getParam('exerciseNames', [])```. This makes it more intricate to send and get props but is an easy way to handle navigation.
+
+#### Components
+The components are minor parts of the application, like the pedometer sensor or the graphs. We tried to find a nice middle way between splitting functionality into smaller components and keeping them in the different screens. The function ```//A general function that returns a text and and a textinput
+    createTextInputView = (keyboardType, defaultValue, title, fieldName) => {
+        return (
+            <View>
+                <TextInput
+                    keyboardType={keyboardType}
+                    value={this.state[fieldName] == null ? defaultValue : this.state[fieldName]}
+                    label={title}
+                    onChangeText={(input) => this.setState({[fieldName]:input})}
+                    mode={'outlined'}
+                    />
+            </View>
+        );
+    ``` Could be its own component, but splitting too many things into smaller parts might make the application structure unnecessarily complex with too many parts for such a simple application. 
+    
+#### Screens
+The screens folder contains all the screens which the user can access. It contains different components and a lot of its own functionality and code we decided to not split into each own component since we felt it didn't make sense.
+
+#### Styling
+Styling is done in each javascript file. We decided to do this instead of having own files since it seems to be the general practice. This helps to keep the css and the code contained together and logical, not having to search between many files or one long one to find what you need. 
+
+#### Use of libraries
+We decided to keep the libraries to just what we needed to do what we wanted to do, but not do everything for us. 
+- The DateTimePicker is used because it simplifies the selection of dates. It is implemented in basic React Native, but have to use the Platform to check system and use the correct implementation for each system. 
+```import {Platform, StyleSheet} from 'react-native';
+
+const styles = StyleSheet.create({
+  height: Platform.OS === 'ios' ? 200 : 100,
+});
+``` 
+- The React Native SVG Charts uses React Native SVG and is the pedometer progress graph.
+- The React Native Chart Kit is the graphs in each exercise. 
+- Moment was barely used (Only in PedometerSensor.js), which was regretfully discovered late. Moment is used to easily make date ibjects.
 
 ### Design
-We are basing a lot of the design on Google's material design and using the third party library Paper which allows for easy implementation of the material design guidelines.
+We are basing a lot of the design on Google's material design and using the third party library React Native Paper which allows for easy implementation of the material design guidelines as well as edit it in our own way. Paper also gives the application the feeling of it being the same across iOS and Android which is not in basic React Native.
 
 ### Testing (Jest)
 As there hasn’t been a new Update from enzyme, it is currently not compatible with React Native, and hence we ended up using the standard React Test Renderer combined with Jest, since it comes with the library itself, which means it’s always up-to-date and compatible. 
