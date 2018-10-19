@@ -1,5 +1,5 @@
-import React, 
-    { Component
+import React,
+{ Component
 } from 'react';
 import {
     StyleSheet,
@@ -101,7 +101,7 @@ export default class GraphingScreen extends Component {
                 break;
             }
         }
-       this.saveAndSetSessions(sessionList);
+        this.saveAndSetSessions(sessionList);
     }
 
     saveAndSetSessions(sessionList) {
@@ -118,7 +118,7 @@ export default class GraphingScreen extends Component {
             sessionLineGraph = <SessionLineGraph
                 goal={exercise.goal}
                 sessions={sessions} />
-            sessionCircleGraph = <SessionCircleGraph 
+            sessionCircleGraph = <SessionCircleGraph
                 goal={exercise.goal}
                 sessions={sessions} />
         }
@@ -129,7 +129,7 @@ export default class GraphingScreen extends Component {
                     <Text>Your goal is {exercise.goal}{exercise.weight}</Text>
                     {sessionLineGraph}
                     {sessionCircleGraph}
-                    <Button 
+                    <Button
                         title={'Add new Session'}
                         onPress={() => this.openCreateSessionScreen()}/>
                 </View>

@@ -47,7 +47,7 @@ export default class CreateSession extends Component {
         params.createSession(
             this.state.goal,
             this.state.date,
-            );
+        );
         navigation.goBack();
     }
 
@@ -68,7 +68,7 @@ export default class CreateSession extends Component {
                         <View>
                             <Text>How close were you to your goal of</Text>
                             <Text>{goal}{weightType}</Text>
-                            <TextInput 
+                            <TextInput
                                 keyboardType={'numeric'}
                                 onChangeText={(text) => {
                                     if (text === '') {
@@ -82,11 +82,11 @@ export default class CreateSession extends Component {
                             <Text style={styles.dateButton}>{dateButtonText}</Text>
                         </TouchableOpacity>
                         <DateTimePicker
-                                date = {today}
-                                isVisible = {this.state.isDateTimePickerVisible}
-                                onConfirm = {this.handleDatePicked}
-                                onCancel = {this.hideDateTimePicker}/>
-                        <Button 
+                            date = {today}
+                            isVisible = {this.state.isDateTimePickerVisible}
+                            onConfirm = {this.handleDatePicked}
+                            onCancel = {this.hideDateTimePicker}/>
+                        <Button
                             title={'Add session to exercise'}
                             disabled={buttonIsDisabled}
                             onPress={() => this.createSession()}/>
