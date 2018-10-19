@@ -3,12 +3,14 @@ import React,
 } from 'react';
 import {
     StyleSheet,
-    Text,
     View,
-    Button,
     ScrollView,
     AsyncStorage,
 } from 'react-native';
+import {
+    Button,
+    Text,
+} from 'react-native-paper';
 import SessionLineGraph from '../components/SessionLineGraph';
 import SessionCircleGraph from '../components/SessionCircleGraph';
 import PersonalNotes from '../components/PersonalNotes';
@@ -115,28 +117,38 @@ export default class GraphingScreen extends Component {
         //If there are no sessions the graphs will not be displayed.
         let sessionLineGraph = <View></View>;
         let sessionCircleGraph = <View></View>;
+        let text1 = <View></View>;
+        let text2 = <View></View>;
+        let text3 = <View></View>;
         if (sessions != null) {
             sessionLineGraph = <SessionLineGraph
                 goal={exercise.goal}
-                sessions={sessions} />
+                sessions={sessions} />;
             sessionCircleGraph = <SessionCircleGraph
                 goal={exercise.goal}
-                sessions={sessions} />
+                sessions={sessions} />;
+            text1 = <Text style={{fontWeight: 'bold'}}>Results:</Text>;
+            text2 = <Text style={styles.text}>Your three newest results compared to goal:</Text>;
+            text3 = <View style={styles.text}><PersonalNotes personalNotes={exercise.personalNotes} /></View>;
         }
         return(
             <ScrollView>
                 <View style={styles.container}>
-
                     <Text style={styles.title}>{exercise.title}</Text>
-                    <Text>Your goal is {exercise.goal}{exercise.weight}, results:</Text>
+                    <Text style={styles.subtitle}>Your goal is {exercise.goal} {weight}</Text>
+                    {text1}
                     {sessionLineGraph}
-                    <Text>3 newest results compared to goal:</Text>
+                    {text2}
                     {sessionCircleGraph}
-                    <PersonalNotes personalNotes={exercise.personalNotes} />
-                    <Button 
-                        title={'Add new Session'}
-                        onPress={() => this.openCreateSessionScreen()}/>
-                        
+                    {text3}
+                    <Button
+                        dark={true}
+                        mode={'contained'}
+                        style={{marginTop: 4}}
+                        onPress={() => this.openCreateSessionScreen()}
+                    >
+                        Add new Session
+                    </Button>
                 </View>
             </ScrollView>
         );
@@ -145,11 +157,20 @@ export default class GraphingScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-
+        paddingTop: 10,
+        paddingHorizontal: 20,
+        backgroundColor: '#ecf8ff',
     },
     title: {
-        fontSize: 18,
+        fontSize: 24,
         textAlign: 'center',
+    },
+    subtitle:{
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    text:{
+        marginTop: 8,
     },
     dateButtonRow: {
         flexDirection: 'row',
