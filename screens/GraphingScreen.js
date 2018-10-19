@@ -138,6 +138,7 @@ export default class GraphingScreen extends Component {
                 <View>
                     <Text style={styles.title}>{exercise.title}</Text>
                     <Text style={styles.subtitle}>Your goal is {exercise.goal} {weight}</Text>
+                    <Text style={styles.subtitle}>Reps: {exercise.reps}    Sets: {exercise.sets}</Text>
                     {text1}
                     {sessionLineGraph}
                     {text2}
