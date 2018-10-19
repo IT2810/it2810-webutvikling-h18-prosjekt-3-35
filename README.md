@@ -40,10 +40,14 @@ Navigation is solved using createStackNavigator() in App.js. We used a simple st
         })
     }
 ```
-Retrieving the prop exerciseNames in CreateExerciseScreen is done by calling ```const uniqueNames = this.props.navigation.getParam('exerciseNames', [])```. This makes it more intricate to send and get props but is an easy way to handle navigation.
+Retrieving the prop exerciseNames in CreateExerciseScreen is done by calling 
+```const uniqueNames = this.props.navigation.getParam('exerciseNames', [])``` 
+This makes it more intricate to send and get props but is an easy way to handle navigation.
 
 #### Components
-The components are minor parts of the application, like the pedometer sensor or the graphs. We tried to find a nice middle way between splitting functionality into smaller components and keeping them in the different screens. The function ```//A general function that returns a text and and a textinput
+The components are minor parts of the application, like the pedometer sensor or the graphs. We tried to find a nice middle way between splitting functionality into smaller components and keeping them in the different screens. The function 
+```
+    //A general function that returns a text and and a textinput
     createTextInputView = (keyboardType, defaultValue, title, fieldName) => {
         return (
             <View>
@@ -56,7 +60,8 @@ The components are minor parts of the application, like the pedometer sensor or 
                     />
             </View>
         );
-    ``` Could be its own component, but splitting too many things into smaller parts might make the application structure unnecessarily complex with too many parts for such a simple application. 
+ ``` 
+Could be its own component, but splitting too many things into smaller parts might make the application structure unnecessarily complex with too many parts for such a simple application. 
     
 #### Screens
 The screens folder contains all the screens which the user can access. It contains different components and a lot of its own functionality and code we decided to not split into each own component since we felt it didn't make sense.
@@ -67,7 +72,8 @@ Styling is done in each javascript file. We decided to do this instead of having
 #### Use of libraries
 We decided to keep the libraries to just what we needed to do what we wanted to do, but not do everything for us. 
 - The DateTimePicker is used because it simplifies the selection of dates. It is implemented in basic React Native, but have to use the Platform to check system and use the correct implementation for each system. 
-```import {Platform, StyleSheet} from 'react-native';
+```
+import {Platform, StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   height: Platform.OS === 'ios' ? 200 : 100,
