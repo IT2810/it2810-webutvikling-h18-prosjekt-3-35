@@ -31,15 +31,18 @@ export default class SessionLineGraph extends Component {
             sessionResultsY: [],
         }
     }
-
+    //On mount it will iterate the sessions and retrieve the dates and results in 3 lists
     componentDidMount = () => this.iterateSessions();
 
+    //If the sessions has changed, update the graphs
     componentDidUpdate = () => {
         if (this.props.sessions.length !== this.state.sessionDatesX.length) {
             this.iterateSessions();
         }
     }
 
+    //Goes through the sessions, creating 3 lists used for the graph
+    //SessionDatesXU is just the date without the day and month
     iterateSessions = () => {
         const sessions = this.props.sessions;
         const sessionDates = [];
@@ -58,12 +61,15 @@ export default class SessionLineGraph extends Component {
         })
     }
 
+    //Gets the date in the form Mon 1 Jan as a string
     getTimeText = (date) => {
         date = new Date(date);
         const weekday = weekdays[date.getDay()];
         const month = months[date.getMonth()];
         return weekday + ' ' + date.getDate() + ' ' + month;
     }
+
+    //Gets the date in the from 17 (date between 1-31) as a string
     getTimeTextU = (date) => {
         date = new Date(date);
         return date.getDate();
@@ -71,10 +77,13 @@ export default class SessionLineGraph extends Component {
 
     render() {
         const {sessionDatesX, sessionResultsY, sessionDatesXU} = this.state;
+        //If the sessions doesn't exist, don't display anything
         if (sessionDatesX.length === 0) {
             return (false);
         }
         let lineData;
+        //If there are less than 4 sessions display the full text
+        //Else only display the dates.
         if (sessionDatesX.length <= 4) {
             lineData = {
             labels: sessionDatesX,
