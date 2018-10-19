@@ -44,39 +44,36 @@ export default class PedometerGoal extends Component {
         const {navigation} = this.props;
         const {params} = this.props.navigation.state;
         const currentSteps = navigation.getParam('currentSteps', 0);
-        const stepGoal = navigation.getParam('stepGoal', 10000)
+        const stepGoal = navigation.getParam('stepGoal', 10000);
+        const buttonColor = this.state.disabledButton ? '#8dc2dc' : '#5c92aa';
         return(
             <View style={styles.modalContainer}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                     <View style={styles.modalContainer}>
-
-                        <View style={styles.stateText}>
-                            <Text style={styles.text}>You have walked {currentSteps} steps</Text>
-                            <Text style={styles.text}>Your daily goal is {stepGoal} steps</Text>
-                        </View>
-
-                        <View style={styles.textInputRow}>
-                            <Text>Edit goal steps:</Text>  
-                            <TextInput
-                                style={styles.inputField}
-                                defaultValue={String(stepGoal)}
-                                keyboardType={'numeric'}
-                                onChangeText={(number) => {
-                                    this.setState({goal: number})
-                                    this.updateDisabledbutton(number)
-                                }}/>                            
-                        </View>
-
-                        <View style={styles.buttonRow}>
-                            <Button 
-                                disabled={this.state.disabledButton}
-                                title={acceptButtonText}
-                                onPress={() => {
-                                    params.acceptChange(this.state.goal)
-                                    navigation.goBack();
-                                }}/>
-                        </View>
-
+                        <Text style={styles.currentText}>You have walked {currentSteps} steps</Text>
+                        <Text style={styles.goalText}>Your daily goal is {stepGoal} steps</Text>
+                        <TextInput
+                            keyboardType={'numeric'}
+                            value={this.state.goal == null ? String(stepGoal) : this.state.goal}
+                            label={'Edit step goal'}
+                            mode={'outlined'}
+                            onChangeText={(number) => {
+                                this.setState({goal: number});
+                                this.updateDisabledbutton(number)
+                            }}
+                        />
+                        <Button
+                            dark={true}
+                            mode={'contained'}
+                            disabled={this.state.disabledButton}
+                            style={{marginTop: 4, backgroundColor: buttonColor}}
+                            onPress={() => {
+                                params.acceptChange(this.state.goal);
+                                navigation.goBack();
+                            }}
+                        >
+                            {acceptButtonText}
+                        </Button>
                     </View>
                 </TouchableWithoutFeedback>
             </View>
@@ -87,13 +84,8 @@ export default class PedometerGoal extends Component {
 const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: '#ecf8ff',
-        flexDirection: 'column',
         flex: 1,
         paddingHorizontal: 20,
-    },
-    inputField: {
-        padding: 5,
-        textAlign: 'center',
     },
     textInputRow: {
         flex: 1,
@@ -105,13 +97,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         marginBottom: 20,
     },
-    stateText: {
-        flex: 1,
-        marginTop: 20,
+    goalText: {
+        textAlign: 'center',
+        fontSize: 16,
         marginBottom: 20,
     },
-    text:  {
+    currentText: {
         textAlign: 'center',
         fontSize: 20,
-    }
+        marginTop: 20,
+        marginBottom: 16,
+    },
 });
