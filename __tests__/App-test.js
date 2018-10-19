@@ -6,8 +6,10 @@ import openExerciseScreen from '../screens/HomeScreen';
 import PedometerProgressGraph from '../screens/HomeScreen';
 import {navigation} from '../screens/GraphingScreen';
 import getTimeText from '../screens/GraphingScreen';
+import isButtonDisabled from '../screens/CreateExerciseScreen';
 import alertDateMessage from '../screens/GraphingScreen';
 import GraphingScreen from '../screens/GraphingScreen';
+import CreateExerciseScreen from '../screens/CreateExerciseScreen';
 import HomeScreen from '../screens/HomeScreen';
 import {acceptButtonText} from '../screens/StepGoalScreen';
 import {stepsWalked} from '../screens/HomeScreen';
@@ -27,16 +29,16 @@ describe('App snapshot', () => {
     expect(tree).toMatchSnapshot();
   });
 
-
-
-
-
-
    it('renders the HomeScreen', async () => {
      const tree = renderer.create(<HomeScreen />).toJSON();
      expect(tree).toMatchSnapshot();
    });
-  
+
+    it('renders the Pedometer', async () => {
+      const tree = renderer.create(<PedometerProgressGraph />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+
     it('renders the root without loading screen', async () => {
       const tree = renderer.create(<App skipLoadingScreen />).toJSON();
       expect(tree).toMatchSnapshot();
@@ -92,37 +94,29 @@ describe('App snapshot', () => {
               expect(component3.root._fiber.stateNode.props.title).toEqual(GraphingScreen);
 
 
+              const component4 = renderer.create(
+                  <isButtonDisabled argument={() => {
+                  }} title={isButtonDisabled}/>
+              );
+              expect(component4.root._fiber.stateNode.props.title).toEqual(CreateExerciseScreen);
+
+
          });
      });
 
-      const testFunc = (a, b, callback) => {
-        callback(a + b);
-      };
-      
-      test("calls callback with arguments to them", () => {
-        const mockCallback = jest.fn();
-        testFunc(1, 2, mockCallback);
-        expect(mockCallback).toHaveBeenCalledWith(3);
+
+      jest.mock("../screens/GraphingScreen");
+
+      ont.getTimeText = jest.fn();
+      let date_jest = 'Mon' + ' ' + '01' + ' ' + 'Jan';
+
+      test("calls getTimeText from GraphingScreen with date_jest as argument", () => {
+        ont.getTimeText(date_jest);
+        expect(ont.getTimeText).toHaveBeenCalledWith(date_jest);
       });
 
-   /*   const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 
-      const testTime = (date) => {
-              date = new Date(date);
-              const weekday = weekdays[date.getDay()];
-              const month = months[date.getMonth()];
-              return weekday + ' ' + date.getDate() + ' ' + month;
-          }
 
 
-        test("", () => {
-          const getTimeText = jest.fn();
-          testTime( 'Mon' + ' ' + '01' + ' ' + 'Jan');
-          expect(getTimeText).toEqual();
-        });
-
-            */
-                    
 });
