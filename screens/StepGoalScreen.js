@@ -15,7 +15,6 @@ import {
 const backButtonText = "Back";
 const acceptButtonText = "OK";
 
-
 export default class PedometerGoal extends Component {
     constructor(props) {
         super(props);
@@ -25,6 +24,8 @@ export default class PedometerGoal extends Component {
         }
     }
 
+    //A weird bug happenes if the ok button was pressed even if 
+    //nothing was changed, so this enables the button on change
     componentDidUpdate = (prevProps) => {
         if (prevProps.goal !== this.props.goal) {
             this.setState({
@@ -34,8 +35,9 @@ export default class PedometerGoal extends Component {
         }
     }
 
+    //Checks if the OK button should be disabled or not
     updateDisabledbutton = (number) => {
-        const buttonStatus = (this.state.goal === number) ? true:false ;
+        const buttonStatus = (this.state.goal === number || number === '') ? true:false ;
         this.setState({disabledButton:buttonStatus });
     }
     
@@ -61,7 +63,7 @@ export default class PedometerGoal extends Component {
                                 onChangeText={(number) => {
                                     this.setState({goal: number})
                                     this.updateDisabledbutton(number)
-                            }}/>                            
+                                }}/>                            
                         </View>
                         <View style={styles.buttonRow}>
                             <Button 
@@ -70,8 +72,7 @@ export default class PedometerGoal extends Component {
                                 onPress={() => {
                                     params.acceptChange(this.state.goal)
                                     navigation.goBack();
-                                }}
-                            />
+                                }}/>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

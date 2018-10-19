@@ -9,12 +9,7 @@ import {
     Title,
 } from 'react-native-paper';
 
-
 export class ExerciseCard extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return(
             <Card style={styles.card}>
