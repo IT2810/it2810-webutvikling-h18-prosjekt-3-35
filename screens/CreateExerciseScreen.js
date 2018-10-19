@@ -36,10 +36,11 @@ export default class CreateExerciseScreen extends Component {
 
     //Checks if the button to allow the creation of an exercise should be disabled or not
     isButtonDisabled = () => {
-        const titleString = this.state.title.toString();
-        const repsString = this.state.reps.toString();
-        const setsString = this.state.sets.toString();
-        const goalString = this.state.goal.toString();
+        const { title, reps, sets, goal } = this.state;
+        const titleString = title.toString();
+        const repsString = reps.toString();
+        const setsString = sets.toString();
+        const goalString = goal.toString();
 
         return titleString === '' || 
             repsString === '' ||  
@@ -96,18 +97,19 @@ export default class CreateExerciseScreen extends Component {
         const uniqueNames = this.props.navigation.getParam('exerciseNames', []);
         const {navigation} = this.props;
         const {params} = this.props.navigation.state;
+        const {title, weightType, personalNotes, reps, sets, goal } = this.state;
         console.log(uniqueNames);
-        console.log(uniqueNames.includes(this.state.title))
-        if (uniqueNames.includes(this.state.title)) {
+        console.log(uniqueNames.includes(title))
+        if (uniqueNames.includes(title)) {
             this.alertNameMessage();
         } else {
             params.createExercise( 
-                this.state.title,
-                this.state.weightType, 
-                this.state.personalNotes,
-                this.state.reps,
-                this.state.sets,
-                this.state.goal,
+                title,
+                weightType, 
+                personalNotes,
+                reps,
+                sets,
+                goal,
                 );
             navigation.goBack();
         }
@@ -124,12 +126,13 @@ export default class CreateExerciseScreen extends Component {
     }
 
     render() {
+        const {sets, reps} = this.state;
         const disabledButton = this.isButtonDisabled();
         const weightTypePicker = this.createWeightTypePicker();
         const personalNotesView = this.createTextInputView('default', '', 'Personal Notes', 'personalNotes');
         const exerciseView = this.createTextInputView('default', '', 'Exercise Name', 'title');
-        const setsView = this.createTextInputView('numeric', String(this.state.sets), 'Sets', 'sets');
-        const repsView = this.createTextInputView('numeric', String(this.state.reps), 'Reps', 'reps');
+        const setsView = this.createTextInputView('numeric', String(sets), 'Sets', 'sets');
+        const repsView = this.createTextInputView('numeric', String(reps), 'Reps', 'reps');
         const goalView = this.createTextInputView('numeric', '', 'Weight Goal', 'goal')
         return (
             <ScrollView>
