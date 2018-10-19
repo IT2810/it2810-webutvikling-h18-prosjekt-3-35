@@ -6,6 +6,7 @@ PMM is an iOS and Android application that motivates the user to create exercise
 ### Functionality
 - The pedometer functionality 
     - On Android phones it uses your google account
+    - On IOS phones it accesses the built in health and fitness application to track steps
     - Accessed from the top of the home screen by clicking on the graph or the logo
     - The daily goal is set to 10 000 steps by default, but can be edited by accessing it
     - The daily goal is saved and retrieved with AsyncStorage
