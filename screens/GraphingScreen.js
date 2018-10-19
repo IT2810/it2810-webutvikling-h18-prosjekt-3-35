@@ -127,13 +127,15 @@ export default class GraphingScreen extends Component {
             sessionCircleGraph = <SessionCircleGraph
                 goal={exercise.goal}
                 sessions={sessions} />;
-            text1 = <Text style={{fontWeight: 'bold'}}>Results:</Text>;
-            text2 = <Text style={styles.text}>Your three newest results compared to goal:</Text>;
-            text3 = <View style={styles.text}><PersonalNotes personalNotes={exercise.personalNotes} /></View>;
+            if (sessions.length !== 0) {
+                text1 = <Text style={{fontWeight: 'bold'}}>Results:</Text>;
+                text2 = <Text style={styles.text}>Your three newest results compared to goal:</Text>;
+                text3 = <View style={styles.text3}><PersonalNotes personalNotes={exercise.personalNotes} /></View>;
+            }
         }
         return(
-            <ScrollView>
-                <View style={styles.container}>
+            <ScrollView style={styles.container}>
+                <View>
                     <Text style={styles.title}>{exercise.title}</Text>
                     <Text style={styles.subtitle}>Your goal is {exercise.goal} {weight}</Text>
                     {text1}
@@ -170,7 +172,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     text:{
-        marginTop: 8,
+        marginTop: 12,
+    },
+    text3:{
+        marginTop: 12,
+        marginBottom: 8,
     },
     dateButtonRow: {
         flexDirection: 'row',

@@ -205,11 +205,9 @@ export default class HomeScreen extends React.Component {
                     </View>
 
                 </ScrollView>
-                {/*
                     <PedometerSensor
                         updateSteps={this.updateSteps.bind(this)}
                     />
-                */}
             </View>
         );
     }

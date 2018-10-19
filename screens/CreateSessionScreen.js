@@ -69,9 +69,7 @@ export default class CreateSession extends Component {
             <ScrollView style={styles.container}>
                 <TouchableWithoutFeedback
                     onPress={Keyboard.dismiss} accessible={false}>
-
                     <View>
-
                         <View>
                             <Text style={styles.title}>How close were you to your goal of:</Text>
                             <Text style={styles.subtitle}>{goal} {weightType}</Text>
