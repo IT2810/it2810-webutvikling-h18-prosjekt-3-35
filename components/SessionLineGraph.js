@@ -9,17 +9,13 @@ import {
 
 const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('window').width-40;
 const chartConfig={
-    backgroundColor: '#e26a00',
-    backgroundGradientFrom: '#fb8c00',
-    backgroundGradientTo: '#ffa726',
+    backgroundGradientFrom: '#9497b8',
+    backgroundGradientTo: '#b3b5cc',
     decimalPlaces: 2, // optional, defaults to 2dp
     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    style: {
-        borderRadius: 16
-    }
-  }
+  };
 
   
 export default class SessionLineGraph extends Component {
@@ -81,7 +77,7 @@ export default class SessionLineGraph extends Component {
                     bezier
                     style={{
                         marginVertical: 8,
-                        borderRadius: 16
+                        borderRadius: 2
                     }}/>
             </View>
         );

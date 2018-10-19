@@ -7,17 +7,13 @@ import {
     ProgressChart,
 } from 'react-native-chart-kit';
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get('window').width-40;
 const chartConfig={
-    backgroundColor: '#e26a00',
-    backgroundGradientFrom: '#fb8c00',
-    backgroundGradientTo: '#ffa726',
+    backgroundGradientFrom: '#9497b8',
+    backgroundGradientTo: '#b3b5cc',
     decimalPlaces: 2, // optional, defaults to 2dp
     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    style: {
-        borderRadius: 16
-    }
-}
+};
 export default class SessionCircleGraph extends Component {
     constructor(props) {
         super(props);
@@ -80,7 +76,11 @@ export default class SessionCircleGraph extends Component {
             data={graphResults}
             width={screenWidth}
             height={220}
-            chartConfig={chartConfig}/>
+            chartConfig={chartConfig}
+            style={{
+                marginVertical: 8,
+                borderRadius: 2
+            }}/>
         );
     }
 
