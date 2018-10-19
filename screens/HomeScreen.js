@@ -4,7 +4,6 @@ import {
     Image,
     StyleSheet,
     View,
-    Text,
     TouchableOpacity,
     AsyncStorage,
 } from 'react-native';
@@ -13,7 +12,6 @@ import {
 } from 'react-native-paper';
 import { PedometerProgressGraph } from '../components/PedometerGraph';
 import { ExerciseCard } from '../components/ExerciseCard';
-import {ExerciseCards} from "../components/ExerciseCards";
 import { PedometerSensor } from '../components/PedometerSensor';
 
 const logoSource = '../assets/images/pmm.png';
@@ -29,6 +27,7 @@ export default class HomeScreen extends React.Component {
             stepsWalked: 1000,
             stepGoal: 10000,
             exercises: [],
+            exerciseNames: []
         }
     }
 
@@ -36,11 +35,20 @@ export default class HomeScreen extends React.Component {
         header: null,
     };
 
+    // The mount function launches retrieval for the daily goal as well as the exercises created.
+    componentDidMount = () => this.retrieveData();
 
-    componentDidMount = () => {
-        this.retrieveData([dailyGoalLocation, exerciseListsLocation]);
-    };
+    //ExerciseNames is used to check if names are unique when creating a new exercise
+    updateUniqueNames = (exerciseList) => {
+        const exerciseNames = []
+        for (const num in exerciseList) {
+            const name = exerciseList[num].title;
+            exerciseNames.push(name);
+        }
+        return exerciseNames;
+    }
 
+    //Takes in a location for the data, as well as the data saved
     saveData = async (location, data) => {
         try {
             await AsyncStorage.setItem(location, JSON.stringify(data));
@@ -49,21 +57,21 @@ export default class HomeScreen extends React.Component {
         }
     };
 
-    retrieveData = async (locations) => {
+    //Uses a list of locations to retrieve the data.
+    retrieveData = async () => {
+        const locations = [dailyGoalLocation, exerciseListsLocation];
         try {
             await AsyncStorage.multiGet(locations)
                 .then((response) =>{
                     let dailyGoal = JSON.parse(response[0][1]);
                     let exerciseList = JSON.parse(response[1][1]);
-                    if (dailyGoal === null) {
-                        dailyGoal = 100000;
-                    }
-                    if (exerciseList === null) {
-                        exerciseList = [];
-                    }
+                    dailyGoal = dailyGoal === null ? 10000 : dailyGoal;
+                    exerciseList = exerciseList === null ? [] : exerciseList;
+                    const exerciseNames = this.updateUniqueNames(exerciseList);
                     this.setState({
                         stepGoal:dailyGoal,
                         exercises:exerciseList,
+                        exerciseNames:exerciseNames,
                     })
                 });
         } catch (error) {
@@ -71,10 +79,11 @@ export default class HomeScreen extends React.Component {
         }
     };
 
-    updateSteps = (steps) => {
-        this.setState({stepsWalked:parseInt(steps,10)})
-      };
+    //This function is sent down to PedometerSensor that updates the steps
+    updateSteps = (steps) => this.setState({stepsWalked:parseInt(steps,10)})
 
+    //This function is sent down to StepGoalScreen to update the step goal,
+    //and saves the updated goal
     editStepGoal = (goal) => {
         this.setState({
             pedometerModalVisible: !this.state.pedometerModalVisible,
@@ -82,11 +91,13 @@ export default class HomeScreen extends React.Component {
         });
         this.saveData(dailyGoalLocation, goal);
     };
-    
+
+    //This function is sent down to CreateExerciseScreen and creates an exercise
+    //based on data retrieved, as well as saving it
     createExercise = (title, weightType, personalNotes, reps, sets, goal) => {
         const newExercise = {
             title: title,
-            weightType: weightType, 
+            weightType: weightType,
             personalNotes: personalNotes,
             reps: reps,
             sets: sets,
@@ -94,32 +105,48 @@ export default class HomeScreen extends React.Component {
         };
         const exerciseLists = this.state.exercises;
         exerciseLists.push(newExercise);
+        const exerciseNames = this.updateUniqueNames(exerciseLists);
         this.saveData(exerciseListsLocation, exerciseLists);
-        this.setState({exercises:exerciseLists});
-    };
+        this.setState({
+            exercises:exerciseLists,
+            exerciseNames:exerciseNames,
+        });
+    }
 
-    openExerciseScreen = (exercise) => {
-        console.log(exercise.goal);
+    //Opens the exercise screen and sends down a prop
+    openExerciseGraphScreen = (exercise) => {
         this.props.navigation.navigate('ExerciseGraph', {
-            title: exercise.title,
-            weightType: exercise.weightType,
-            personalNotes: exercise.personalNotes,
-            reps: exercise.reps,
-            sets: exercise.sets,
-            goal: exercise.goal,
+            exercise:exercise,
         });
     };
 
+    //Opens the StepGoalScreen and sends down props and a function
+    openStepGoalScreen = () => {
+        this.props.navigation.navigate('StepGoal', {
+            currentSteps: this.state.stepsWalked,
+            stepGoal: this.state.stepGoal,
+            acceptChange: this.editStepGoal.bind(this),
+        })
+    }
+
+    //Opens the CreateExereciseScreen
+    openCreateExerciseScreen = () => {
+        this.props.navigation.navigate('CreateExercise', {
+            createExercise: this.createExercise.bind(this),
+            exerciseNames: this.state.exerciseNames,
+        })
+    }
+
+    //Creates the ExerciseCards that are rendered
     createExerciseCards = () => {
         const exerciseLists = this.state.exercises;
         const exerciseCards = [];
-        //console.log(exerciseLists);
         for (const num in exerciseLists) {
             exerciseCards.push(
-                <TouchableOpacity 
+                <TouchableOpacity
                     key={num}
-                    onPress={() => this.openExerciseScreen(exerciseLists[num])} >
-                    <ExerciseCard 
+                    onPress={() => this.openExerciseGraphScreen(exerciseLists[num])} >
+                    <ExerciseCard
                         title={exerciseLists[num].title}
                     />
                 </TouchableOpacity>);
@@ -133,28 +160,19 @@ export default class HomeScreen extends React.Component {
             <View style = {styles.container}>
                 <View style = {styles.lineStyle}/>
                 <ScrollView style = {styles.ScrollView} >
-                    <TouchableOpacity onPress={() => 
-                        this.props.navigation.navigate('StepGoal', {
-                            currentSteps: this.state.stepsWalked,
-                            stepGoal: this.state.stepGoal,
-                            acceptChange: this.editStepGoal.bind(this),
-                        })
-                    }>
+                    <TouchableOpacity onPress={() => this.openStepGoalScreen()}>
                         <Image
                             source = {require(logoSource)}
                             style = {styles.logo}/>
-                        <PedometerProgressGraph 
-                            stepsWalked={this.state.stepsWalked} 
+                        <PedometerProgressGraph
+                            stepsWalked={this.state.stepsWalked}
                             goal={this.state.stepGoal} />
                     </TouchableOpacity>
                     <View>
                         <TouchableOpacity
-                        style={styles.addExerciseView}
-                        onPress={() =>
-                            this.props.navigation.navigate('CreateExercise', {
-                                createExercise: this.createExercise.bind(this)
-                            })}>
-                            <Button mode={'contained'} dark>Add exercise</Button>
+                            style={styles.addExerciseView}
+                            onPress={() => this.openCreateExerciseScreen()} >
+                            <Button mode={'contained'} dark={true}>Add exercise</Button>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.cardContainer}>
@@ -162,8 +180,8 @@ export default class HomeScreen extends React.Component {
                     </View>
                 </ScrollView>
                 {/*
-                    <PedometerSensor 
-                        updateSteps={this.updateSteps.bind(this)} 
+                    <PedometerSensor
+                        updateSteps={this.updateSteps.bind(this)}
                     />
                 */}
             </View>);
@@ -172,7 +190,7 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'lightgray',
+        backgroundColor: '#ecf8ff',
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,
@@ -201,7 +219,6 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     ScrollView: {
-        backgroundColor: 'lightgray',
         alignSelf: 'stretch',
     },
     cardContainer: {

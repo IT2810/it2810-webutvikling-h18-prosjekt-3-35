@@ -1,8 +1,8 @@
 import React, {
     Component
 } from 'react';
-import { Text, View } from 'react-native';
 import { Pedometer, Expo } from 'expo';
+import moment from 'moment';
 
 export class PedometerSensor extends Component {
     constructor(props) {
@@ -14,32 +14,33 @@ export class PedometerSensor extends Component {
         }
     }
 
+    //Registers to the phone's pedometer
     componentDidMount = () => {
         this.subscribe();
         console.log("mounting pedometer");
     }
     
+    //Unregister the phone's pedometer
     componentWillUnmount = () => {
         this.unsubscribe();
         console.log("unmounting pedometer");
     }
     
     subscribe = async () => {
+        //Updates the current step count when walking.
         this.subscription = Pedometer.watchStepCount(result => {
-            console.log(result.steps)
             this.setState({currentStepCount: result.steps});
-            console.log(this.state.pastStepCount + this.state.currentStepCount);
             this.props.updateSteps(this.state.pastStepCount + this.state.currentStepCount);
         });
 
-        const end = new Date();
-        const start = new Date();
-        start.setHours(0,0,0,0);
-        end.setHours(24,0,0,0);
 
+        const start = moment().subtract(1, 'days').endOf('day').toDate();
+        const end = moment().endOf('day').toDate();
+
+        //Gets the step count between two dates
         Pedometer.getStepCountAsync(start, end).then(
             result => {
-                console.log(result.steps)
+                console.log(result);
                 this.setState({ pastStepCount: result.steps});
                 this.props.updateSteps(this.state.pastStepCount);
             },
@@ -49,11 +50,13 @@ export class PedometerSensor extends Component {
         );
     };
     
+    //Unsubscribes from the phones pedometer
     unsubscribe = () => {
         this.subscription && this.subscription.remove();
         this.subscription = null;
     };
 
+    //Updates the parent's step count which is used in the graph
     updateSteps = (steps) => this.props.updateSteps(steps);
 
     render() {
