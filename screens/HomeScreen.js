@@ -71,10 +71,10 @@ export default class HomeScreen extends React.Component {
         }
     };
 
-    //This function is sent down to PedometerSensor that updates the steps 
+    //This function is sent down to PedometerSensor that updates the steps
     updateSteps = (steps) => this.setState({stepsWalked:parseInt(steps,10)})
 
-    //This function is sent down to StepGoalScreen to update the step goal, 
+    //This function is sent down to StepGoalScreen to update the step goal,
     //and saves the updated goal
     editStepGoal = (goal) => {
         this.setState({
@@ -83,12 +83,12 @@ export default class HomeScreen extends React.Component {
         });
         saveData(dailyGoalLocation, goal);
     };
-    
+
     //This function is sent down to CreateExerciseScreen and creates an exercise
     createExercise = (title, weightType, personalNotes, reps, sets, goal) => {
         const newExercise = {
             title: title,
-            weightType: weightType, 
+            weightType: weightType,
             personalNotes: personalNotes,
             reps: reps,
             sets: sets,
@@ -118,7 +118,7 @@ export default class HomeScreen extends React.Component {
         })
     }
 
-    //Opens the CreateExereciseScreen 
+    //Opens the CreateExereciseScreen
     openCreateExerciseScreen = () => {
         this.props.navigation.navigate('CreateExercise', {
             createExercise: this.createExercise.bind(this),
@@ -182,8 +182,8 @@ export default class HomeScreen extends React.Component {
                         <Image
                             source = {require(logoSource)}
                             style = {styles.logo}/>
-                        <PedometerProgressGraph 
-                            stepsWalked={this.state.stepsWalked} 
+                        <PedometerProgressGraph
+                            stepsWalked={this.state.stepsWalked}
                             goal={this.state.stepGoal} />
                     </TouchableOpacity>
                     <View>
@@ -198,8 +198,8 @@ export default class HomeScreen extends React.Component {
                     </View>
                 </ScrollView>
                 {/*
-                    <PedometerSensor 
-                        updateSteps={this.updateSteps.bind(this)} 
+                    <PedometerSensor
+                        updateSteps={this.updateSteps.bind(this)}
                     />
                 */}
             </View>);
