@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import SessionLineGraph from '../components/SessionLineGraph';
 import SessionCircleGraph from '../components/SessionCircleGraph';
+import PersonalNotes from '../components/PersonalNotes';
 const sessionLocation = '/sessions';
 
 export default class GraphingScreen extends Component {
@@ -24,11 +25,12 @@ export default class GraphingScreen extends Component {
         }
     }
 
-    //Load the exercise specific sessions
+    //Load the exercise specific sessions on mount
     componentDidMount = () => {
         this.retrieveSessions(this.state.exercise);
     }
 
+    //Saving the exercise specific sessions in async storage under the exercise title
     saveSessions = async (title, sessions) => {
         try {
             console.log("Saving session:");
@@ -39,6 +41,7 @@ export default class GraphingScreen extends Component {
         }
     }
 
+    //Retireving the exercise specific sessions as well as setting them when loaded
     retrieveSessions = async (exercise) => {
         try {
             await AsyncStorage.getItem(exercise.title + sessionLocation)
@@ -54,12 +57,7 @@ export default class GraphingScreen extends Component {
         }
     }
 
-    getTimeText = (date) => {
-        const weekday = weekdays[date.getDay()];
-        const month = months[date.getMonth()];
-        return weekday + ' ' + date.getDate() + ' ' + month;
-    }
-
+    //Opening when the user clicks on 'add new session' button
     openCreateSessionScreen = () => {
         const {navigation} = this.props;
         const {exercise} = this.state;
@@ -71,6 +69,8 @@ export default class GraphingScreen extends Component {
         });
     }
 
+    //When the fields in the CreateSessionScreen has been selected and the button pressed
+    //It launches this function
     createSession = (result, date) => {
         const {sessions} = this.state;
         const newSession = {
@@ -78,8 +78,6 @@ export default class GraphingScreen extends Component {
             date: date,
         };
         const sessionList = sessions == null ? [] : sessions;
-        console.log("sessionlist")
-        console.log(sessionList);
         if (sessionList.length === 0) {
             sessionList.push(newSession);
             this.saveAndSetSessions(sessionList);
@@ -88,6 +86,7 @@ export default class GraphingScreen extends Component {
         }
     }
 
+    //Adds the session in the appropriate spot in the list based on the dates
     sortSessionInList = (sessionList, newSession) => {
         const newDate = newSession.date;
         for (const num in sessionList) {
@@ -104,6 +103,7 @@ export default class GraphingScreen extends Component {
         this.saveAndSetSessions(sessionList);
     }
 
+    //Saves and sets the sessions
     saveAndSetSessions(sessionList) {
         this.saveSessions(this.state.exercise.title, sessionList);
         this.setState({sessions:sessionList});
@@ -112,6 +112,7 @@ export default class GraphingScreen extends Component {
     render() {
         const {sessions, exercise} = this.state;
         const weight = exercise.weightType === 'none' ? '' : exercise.weightType;
+        //If there are no sessions the graphs will not be displayed.
         let sessionLineGraph = <View></View>;
         let sessionCircleGraph = <View></View>;
         if (sessions != null) {
@@ -125,13 +126,17 @@ export default class GraphingScreen extends Component {
         return(
             <ScrollView>
                 <View style={styles.container}>
+
                     <Text style={styles.title}>{exercise.title}</Text>
-                    <Text>Your goal is {exercise.goal}{exercise.weight}</Text>
+                    <Text>Your goal is {exercise.goal}{exercise.weight}, results:</Text>
                     {sessionLineGraph}
+                    <Text>3 newest results compared to goal:</Text>
                     {sessionCircleGraph}
-                    <Button
+                    <PersonalNotes personalNotes={exercise.personalNotes} />
+                    <Button 
                         title={'Add new Session'}
                         onPress={() => this.openCreateSessionScreen()}/>
+                        
                 </View>
             </ScrollView>
         );

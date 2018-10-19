@@ -24,8 +24,23 @@ export default class SessionCircleGraph extends Component {
         console.log(props);
     }
 
+    //On mount it will iterate the sessions into only the results, retrieve the 3 last results, then set the state
     componentDidMount = () => {
         const { sessions } = this.props;
+        this.prepareCircleDate(sessions);
+    }
+
+    //If the sessions has changed, update the graph
+    componentDidUpdate = () => {
+        const { sessions } = this.props;
+        const { sessionLength } = this.state;
+        if (sessions.length !== sessionLength) {
+            this.prepareCircleDate(sessions);
+        }
+    }
+
+    //Gets the 3 final results and sets state
+    prepareCircleDate = (sessions) => {
         const sessionResults = this.iterateSessions(sessions);
         const circleData = this.getProgressCircleData(sessionResults);
         this.setState({
@@ -34,19 +49,7 @@ export default class SessionCircleGraph extends Component {
         });
     }
 
-    componentDidUpdate = () => { //forever updating state, because sessions.lenght !== graphresults.length 
-        const { sessions } = this.props;
-        const { sessionLength } = this.state;
-        if (sessions.length !== sessionLength) {
-            const sessionResults = this.iterateSessions(sessions);
-            const circleData = this.getProgressCircleData(sessionResults);
-            this.setState({
-                graphResults:circleData,
-                sessionLength:sessions.length,
-            });
-        }
-    }
-
+    //Gets the last 3 results and sets it to max 100% if it is actually 1 the graph might not create a circle.
     getProgressCircleData = (results) => {
         const returnData = results.slice(-3);
         for (num in returnData) {
@@ -57,6 +60,7 @@ export default class SessionCircleGraph extends Component {
         return returnData;
     }
 
+    //Goes through the sessions and getting only the results
     iterateSessions = (sessions) => {
         const sessionResults = [];
         for (const num in sessions) {

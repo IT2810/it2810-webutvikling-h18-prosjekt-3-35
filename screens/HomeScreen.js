@@ -6,6 +6,7 @@ import {
     View,
     TouchableOpacity,
     AsyncStorage,
+    Alert,
 } from 'react-native';
 import {
     Button,
@@ -13,9 +14,9 @@ import {
 import { PedometerProgressGraph } from '../components/PedometerGraph';
 import { ExerciseCard } from '../components/ExerciseCard';
 import { PedometerSensor } from '../components/PedometerSensor';
+import { saveData } from '../constants/AsyncStorage';
 
 const logoSource = '../assets/images/pmm.png';
-const addExerciseButton = '../assets/images/plus.png';
 const dailyGoalLocation = 'dailyGoal';
 const exerciseListsLocation = 'exerciseCards';
 
@@ -48,16 +49,8 @@ export default class HomeScreen extends React.Component {
         return exerciseNames;
     }
 
-    //Takes in a location for the data, as well as the data saved
-    saveData = async (location, data) => {
-        try {
-            await AsyncStorage.setItem(location, JSON.stringify(data));
-        } catch (error) {
-            console.warn(error);
-        }
-    };
-
-    //Uses a list of locations to retrieve the data.
+    //Uses a list of locations to retrieve the data, create a list unique names so they won't be reused
+    //as well as setting the state.
     retrieveData = async () => {
         const locations = [dailyGoalLocation, exerciseListsLocation];
         try {
@@ -89,11 +82,10 @@ export default class HomeScreen extends React.Component {
             pedometerModalVisible: !this.state.pedometerModalVisible,
             stepGoal: parseInt(goal, 10),
         });
-        this.saveData(dailyGoalLocation, goal);
+        saveData(dailyGoalLocation, goal);
     };
 
     //This function is sent down to CreateExerciseScreen and creates an exercise
-    //based on data retrieved, as well as saving it
     createExercise = (title, weightType, personalNotes, reps, sets, goal) => {
         const newExercise = {
             title: title,
@@ -103,22 +95,21 @@ export default class HomeScreen extends React.Component {
             sets: sets,
             goal: goal,
         };
+        this.pushExerciseInList(newExercise)
+    }
+
+    //Pushes the newly created exercise in the list, saving it and setting the state
+    pushExerciseInList(newExercise) {
         const exerciseLists = this.state.exercises;
         exerciseLists.push(newExercise);
         const exerciseNames = this.updateUniqueNames(exerciseLists);
-        this.saveData(exerciseListsLocation, exerciseLists);
+        saveData(exerciseListsLocation, exerciseLists);
         this.setState({
             exercises:exerciseLists,
             exerciseNames:exerciseNames,
         });
     }
-
-    //Opens the exercise screen and sends down a prop
-    openExerciseGraphScreen = (exercise) => {
-        this.props.navigation.navigate('ExerciseGraph', {
-            exercise:exercise,
-        });
-    };
+    
 
     //Opens the StepGoalScreen and sends down props and a function
     openStepGoalScreen = () => {
@@ -137,29 +128,60 @@ export default class HomeScreen extends React.Component {
         })
     }
 
+    
     //Creates the ExerciseCards that are rendered
     createExerciseCards = () => {
         const exerciseLists = this.state.exercises;
         const exerciseCards = [];
         for (const num in exerciseLists) {
             exerciseCards.push(
-                <TouchableOpacity
-                    key={num}
-                    onPress={() => this.openExerciseGraphScreen(exerciseLists[num])} >
-                    <ExerciseCard
-                        title={exerciseLists[num].title}
-                    />
-                </TouchableOpacity>);
+                <ExerciseCard
+                    alertDelete={this.alertDelete.bind(this)}
+                    key={num} 
+                    index={num}
+                    navigation={this.props.navigation}
+                    exercise={exerciseLists[num]}/>
+                );
         }
         return exerciseCards;
     };
+    
+    //Alert for deleting the specific exercise
+    alertDelete = (index, title) => {
+        Alert.alert(
+            'Delete exercise?',
+            'Do you want to delete ' + title + "?" ,
+            [
+              {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+              {text: 'OK', onPress: () => {
+                  this.deleteExercise(index, title);
+                }},
+            ],
+            { cancelable: false }
+          )
+    }
+
+    //Deletes the exercise and sessions from local storage
+    deleteExercise = (index, title) => {
+        const list = this.state.exercises;
+        list.splice(index,1);
+        saveData(exerciseListsLocation, list);
+        saveData(title+'/sessions', []);
+        const uniqueNames = this.updateUniqueNames(list);
+        this.setState({
+            exercises:list,
+            exerciseNames:uniqueNames
+        });
+    }
 
     render() {
         const exerciseCards = this.createExerciseCards();
         return (
             <View style = {styles.container}>
-                <View style = {styles.lineStyle}/>
+                <View style = {styles.lineStyle} />
+
                 <ScrollView style = {styles.ScrollView} >
+                
                     <TouchableOpacity onPress={() => this.openStepGoalScreen()}>
                         <Image
                             source = {require(logoSource)}
@@ -168,6 +190,7 @@ export default class HomeScreen extends React.Component {
                             stepsWalked={this.state.stepsWalked}
                             goal={this.state.stepGoal} />
                     </TouchableOpacity>
+
                     <View>
                         <TouchableOpacity
                             style={styles.addExerciseView}
@@ -175,16 +198,19 @@ export default class HomeScreen extends React.Component {
                             <Button mode={'contained'} dark={true}>Add exercise</Button>
                         </TouchableOpacity>
                     </View>
+
                     <View style={styles.cardContainer}>
                         {exerciseCards}
                     </View>
+
                 </ScrollView>
                 {/*
                     <PedometerSensor
                         updateSteps={this.updateSteps.bind(this)}
                     />
                 */}
-            </View>);
+            </View>
+        );
     }
 }
 

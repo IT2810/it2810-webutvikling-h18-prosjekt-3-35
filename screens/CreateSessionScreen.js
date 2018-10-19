@@ -42,7 +42,7 @@ export default class CreateSession extends Component {
         })
     };
 
-    //Gives data to the prop function that will create a session, and goes back
+    //Returns the values to the prop function and goes back to the previous screen
     createSession = () => {
         const {navigation} = this.props;
         const {params} = this.props.navigation.state;
@@ -53,6 +53,7 @@ export default class CreateSession extends Component {
         navigation.goBack();
     }
 
+    //Hides the date time picker by setting state
     hideDateTimePicker = () => this.setState({isDateTimePickerVisible:!this.state.isDateTimePickerVisible});
 
     render() {
@@ -63,11 +64,14 @@ export default class CreateSession extends Component {
         const today = this.state.date === null ? new Date() : this.state.date;
         const buttonIsDisabled = (this.state.goal === null || this.state.date === null);
         const buttonColor = buttonIsDisabled ? '#8dc2dc' : '#5c92aa';
+        
         return (
             <ScrollView style={styles.container}>
                 <TouchableWithoutFeedback
                     onPress={Keyboard.dismiss} accessible={false}>
+
                     <View>
+
                         <View>
                             <Text style={styles.title}>How close were you to your goal of:</Text>
                             <Text style={styles.subtitle}>{goal} {weightType}</Text>
@@ -93,11 +97,13 @@ export default class CreateSession extends Component {
                                 {dateButtonText}
                             </Button>
                         </TouchableOpacity>
+
                         <DateTimePicker
                             date = {today}
                             isVisible = {this.state.isDateTimePickerVisible}
                             onConfirm = {this.handleDatePicked}
                             onCancel = {this.hideDateTimePicker}/>
+
                         <Button
                             dark={true}
                             mode={'contained'}
@@ -108,6 +114,7 @@ export default class CreateSession extends Component {
                             Add session to exercise
                         </Button>
                     </View>
+
                 </TouchableWithoutFeedback>
             </ScrollView>
         );

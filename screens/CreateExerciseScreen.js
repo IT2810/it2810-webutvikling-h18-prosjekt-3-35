@@ -49,20 +49,6 @@ export default class CreateExerciseScreen extends Component {
             goalString === '';
     };
 
-    //Creates a list of picker items based on the array WeightTypes
-    PickerWeightList = () => {
-        const pickerList = [];
-        for (weight in weightTypes) {
-            pickerList.push(
-                <Picker.Item 
-                    key={weight}
-                    label={weightTypes[weight].title} 
-                    value={weightTypes[weight.value]} />
-            );  
-        }
-        return pickerList;
-    };
-
     //A general function that returns a text and and a textinput
     createTextInputView = (keyboardType, defaultValue, title, fieldName) => {
         return (
@@ -93,6 +79,7 @@ export default class CreateExerciseScreen extends Component {
         );
     };
 
+    //A single radio button with a label
     createRadioButton = (weight, text) => {
         const {weightType} = this.state;
         return (
@@ -143,6 +130,7 @@ export default class CreateExerciseScreen extends Component {
     };
 
     render() {
+        //Creates almost all the components to be displayed
         const {sets, reps} = this.state;
         const disabledButton = this.isButtonDisabled();
         const buttonColor = disabledButton ? '#8dc2dc' : '#5c92aa';
