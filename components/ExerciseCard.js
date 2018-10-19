@@ -1,37 +1,28 @@
-import React, {
-    Component
-} from 'react';
+import React, { Component } from 'react';
 import {
     StyleSheet,
     View,
     Text,
-    TouchableOpacity,
 } from 'react-native';
-
+import {
+    Card,
+    Title,
+} from 'react-native-paper';
 
 export class ExerciseCard extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return(
-            <View style={styles.container}>
-                <Text style={styles.title}>{this.props.title}</Text>
-            </View>
+            <Card style={styles.card} theme={{ colors:{text: '#ecf8ff'}}}>
+                <Card.Content>
+                    <Title>{this.props.title}</Title>
+                </Card.Content>
+            </Card>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        backgroundColor: '#fff',
-        alignContent: 'stretch',
-        marginBottom: 5,
-        padding: 10,
-    },
-    title: {
-        fontSize: 18,
+    card: {
+        marginBottom: 2,
     }
 });
