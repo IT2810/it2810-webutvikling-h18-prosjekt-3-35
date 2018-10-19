@@ -1,25 +1,26 @@
-import React, 
-    { Component
-} from 'react';
+import React, { Component } from 'react';
 import {
     StyleSheet,
     View,
     TouchableWithoutFeedback,
-    Text,
-    TextInput,
     Keyboard,
     Picker,
-    Button,
     ScrollView,
     Alert,
 } from 'react-native';
+import {
+    Button,
+    RadioButton,
+    Text,
+    TextInput,
+} from 'react-native-paper';
 
 const acceptButtonText = 'OK';
 const weightTypes = [
     {title: 'Kilograms', value: 'kg'},
     {title: 'Pounds', value: 'pounds'},
     {title: 'No Weight', value: 'none'},
-]
+];
 
 export default class CreateExerciseScreen extends Component {
     constructor(props) {
@@ -28,8 +29,8 @@ export default class CreateExerciseScreen extends Component {
             title: '',
             weightType: 'kg',
             personalNotes: '',
-            reps: 8,
-            sets: 3,
+            reps: '8',
+            sets: '3',
             goal: '',
         }
     }
@@ -42,26 +43,12 @@ export default class CreateExerciseScreen extends Component {
         const setsString = sets.toString();
         const goalString = goal.toString();
 
-        return titleString === '' || 
-            repsString === '' ||  
+        return titleString === '' ||
+            repsString === '' ||
             setsString === '' ||
-            goalString === '' ? true : false;
-    }
+            goalString === '';
+    };
 
-    //Creates a picker based on the picker items that lets the user select a weight type
-    createWeightTypePicker = () => {
-        const pickerWeightList = this.PickerWeightList();
-        return (
-            <View>
-                <Text>Weight:</Text>
-                <Picker
-                    selectedValue={this.state.weightType}
-                    onValueChange={(itemValue) => this.setState({weightType: itemValue})}>
-                    {pickerWeightList}
-                </Picker>
-            </View>
-        );
-    }
     //Creates a list of picker items based on the array WeightTypes
     PickerWeightList = () => {
         const pickerList = [];
@@ -74,20 +61,50 @@ export default class CreateExerciseScreen extends Component {
             );  
         }
         return pickerList;
-    }
+    };
 
     //A general function that returns a text and and a textinput
-    createTextInputView = (keyboardType, defaultValue, title, state) => {
+    createTextInputView = (keyboardType, defaultValue, title, fieldName) => {
         return (
             <View>
-                <Text>{title}:</Text>
-                <TextInput 
-                    onChangeText={(input) => this.setState({[state]:input})}
+                <TextInput
                     keyboardType={keyboardType}
-                    defaultValue={defaultValue}/>
+                    value={this.state[fieldName] == null ? defaultValue : this.state[fieldName]}
+                    label={title}
+                    onChangeText={(input) => this.setState({[fieldName]:input})}
+                    mode={'outlined'}
+                    />
             </View>
         );
     
+    };
+
+    //Creates a picker based on the picker items that lets the user select a weight type
+    createWeightRadioButtons = () => {
+        return (
+            <View>
+                <Text>Weight:</Text>
+                <View style={styles.radiobuttons}>
+                    {this.createRadioButton('kg', 'KG')}
+                    {this.createRadioButton('lbs', 'Lbs')}
+                    {this.createRadioButton('none', 'No Weight')}
+                </View>
+            </View>
+        );
+    };
+
+    createRadioButton = (weight, text) => {
+        const {weightType} = this.state;
+        return (
+            <View>
+                <Text style={styles.radioLabel}>{text}</Text>
+                <RadioButton
+                    value={weight}
+                    status={weightType === weight ? 'checked' : 'unchecked'}
+                    onPress={() => {this.setState({weightType: weight}); }}
+                />
+            </View>
+        );
     }
 
     //When the OK has been selected it either sends an alert message about
@@ -113,34 +130,33 @@ export default class CreateExerciseScreen extends Component {
                 );
             navigation.goBack();
         }
-    }
+    };
 
     //Alerts that the exercise name is taken
     alertNameMessage = () => {
         Alert.alert(
-            'Exercise already esists',
+            'Exercise already exists',
             'An exercise needs a unique name',
             [{text: 'OK', onPress: () => console.log('OK Pressed')},],
             { cancelable: false }
           )
-    }
+    };
 
     render() {
         const {sets, reps} = this.state;
         const disabledButton = this.isButtonDisabled();
-        const weightTypePicker = this.createWeightTypePicker();
+        const weightTypePicker = this.createWeightRadioButtons();
         const personalNotesView = this.createTextInputView('default', '', 'Personal Notes', 'personalNotes');
         const exerciseView = this.createTextInputView('default', '', 'Exercise Name', 'title');
         const setsView = this.createTextInputView('numeric', String(sets), 'Sets', 'sets');
         const repsView = this.createTextInputView('numeric', String(reps), 'Reps', 'reps');
         const goalView = this.createTextInputView('numeric', '', 'Weight Goal', 'goal')
         return (
-            <ScrollView>
+            <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
                 <TouchableWithoutFeedback 
-                    onPress={Keyboard.dismiss} accessible={false}
+                    accessible={false}
                     >
-                    <View
-                    style={styles.container}>
+                    <View>
                         
                         {exerciseView}
                         {weightTypePicker}
@@ -149,11 +165,15 @@ export default class CreateExerciseScreen extends Component {
                         {personalNotesView}
                         {goalView}
 
-                        <Button 
+                        <Button
+                            mode={'contained'}
                             disabled={disabledButton}
+                            style={styles.button}
                             title={acceptButtonText}
                             onPress={() => this.buttonPressed()}
-                        />
+                        >
+                            {acceptButtonText}
+                        </Button>
                     </View>
                 </TouchableWithoutFeedback>
             </ScrollView>
@@ -164,5 +184,17 @@ export default class CreateExerciseScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingTop: 10,
+        paddingHorizontal: 20,
+        backgroundColor: '#ecf8ff',
+    },
+    button:{
+        marginTop: 4,
+    },
+    radiobuttons:{
+        flexDirection: 'row',
+    },
+    radioLabel:{
+        alignSelf: 'center',
     },
 });

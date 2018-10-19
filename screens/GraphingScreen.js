@@ -74,11 +74,11 @@ export default class GraphingScreen extends Component {
         const weekday = weekdays[date.getDay()];
         const month = months[date.getMonth()];
         return weekday + ' ' + date.getDate() + ' ' + month;
-    }
+    };
     setDate = (date, name) => {
         (name === 'FromDate') ? this.setState({fromDate:date}) : this.setState({toDate:date})
         this.setState({isDateTimePickerVisible: !this.state.isDateTimePickerVisible,})
-    }
+    };
 
     alertDateMessage = (message) => {
         Alert.alert(
@@ -87,7 +87,7 @@ export default class GraphingScreen extends Component {
             [{text: 'OK', onPress: () => console.log('OK Pressed')},],
             { cancelable: false }
           )
-    }
+    };
 
     openCreateSessionScreen = () => {
         this.props.navigation.navigate('CreateSession', {
@@ -96,7 +96,7 @@ export default class GraphingScreen extends Component {
             goal:this.state.exercise.goal,
             createSession:this.createSession.bind(this),
         });
-    }
+    };
 
     createSession = (result, date) => {
         const newSession = {
@@ -120,7 +120,7 @@ export default class GraphingScreen extends Component {
             (this.state.clickedDateName === 'FromDate') ? this.setState({fromDate:date}) : this.setState({toDate:date});
         }
         this.hideDateTimePicker();
-    }
+    };
 
     showHideDatepicker = (name, date) => {
         this.setState({
@@ -128,7 +128,7 @@ export default class GraphingScreen extends Component {
             clickedDate: date,
             isDateTimePickerVisible: !this.state.isDateTimePickerVisible,
         });
-    }
+    };
 
     hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
 
@@ -168,7 +168,7 @@ export default class GraphingScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-
+        backgroundColor: '#ecf8ff',
     },
     title: {
         fontSize: 18,

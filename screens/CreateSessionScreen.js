@@ -1,6 +1,4 @@
-import React, 
-    { Component
-} from 'react';
+import React, { Component } from 'react';
 import {
     StyleSheet,
     View,
@@ -63,10 +61,10 @@ export default class CreateSession extends Component {
         const today = this.state.date === null ? new Date() : this.state.date;
         const buttonIsDisabled = (this.state.goal === null || this.state.date === null);
         return (
-            <ScrollView>
+            <ScrollView style={styles.container}>
                 <TouchableWithoutFeedback
                     onPress={Keyboard.dismiss} accessible={false}>
-                    <View style={styles.container}>
+                    <View>
                         <View>
                             <Text>How close were you to your goal of</Text>
                             <Text>{goal}{weightType}</Text>
@@ -101,6 +99,7 @@ export default class CreateSession extends Component {
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#ecf8ff',
         padding: 10,
     },
     dateButton: {
